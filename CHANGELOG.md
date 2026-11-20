@@ -1,5 +1,37 @@
 # Changelog
 
+## Unreleased
+
+- A new page layout. The left sidebar is gone; the top bar holds the logo, a task picker (with
+  the count of what waits on you) and the controls. The world takes the middle of the page; the
+  task (Now, the steps, the decisions, the events) and the crew are tabs of a panel beside it.
+- The chat with the main session is always open under the world. When the session holds its
+  turn for the page, the message goes at once. While it works, the message waits in a queue and
+  goes when its turn comes. With no session open, the chat writes the whole
+  `cd <worktree> && claude "<message>"` command for a terminal; the page cannot open a session.
+- `GET /api/worktrees`: every worktree, with or without a task, with its path, its switches and
+  whether a Claude session is alive there (for the chat).
+- The Site tab is a virtual office in the style of Gather: a world of tiles seen from above, in
+  pixel art drawn by the page (no image files). You walk your own avatar with WASD, the arrows or
+  a click on the floor; the camera follows you, with zoom, a minimap (click it to walk there) and
+  a bar at the bottom.
+- The crew are workers in hard hats of their role's color; the foreman (the main session) wears
+  white. They find their way along the halls and through the doors, never through a wall or a desk.
+- Come close to someone and their card opens beside the map, where you answer what they wait
+  for. Come close to the foreman and the chat with the session lights up.
+- The flow plays out on the map. An agent not started waits in the break room and walks to its
+  desk when its stage starts; the foreman walks over to hand it the task. A finished stage
+  carries its file to the foreman. An agent with its hand up goes to the foreman's office to ask.
+  In the break room, people stroll and go for coffee.
+- "▶ Simulate" plays a whole task with sample data in about a minute; nothing is sent or read.
+- With no task, the site still shows: everyone idle, with a "💤 no task" bubble.
+- The crew panel beside the map lists everyone with their room, state and current activity.
+  Whoever raised a hand comes first.
+- The chat bar under the map: when the main session finishes its turn and the page holds it,
+  you write your next message there.
+- The animation runs only while someone walks, so a still site costs nothing.
+- Fixed: the "your turn" and "approve in the terminal" alerts showed a raw `{session}`.
+
 ## 0.10.0
 
 From a fork of this kit used daily on a production codebase:

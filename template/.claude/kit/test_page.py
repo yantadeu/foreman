@@ -161,6 +161,14 @@ def office(page):
     assert "alertBody(hand.alert, 0)" in code and "wireAlerts(pop, [hand.alert])" in code, "the request is answered from the robot"
     assert "const here = stepRoom(list[now]);" in code, "the task stands in the room of its current step"
     assert all(k in d["pt"] for k in ("office.hand", "pop.blocked", "pop.idle"))
+    assert 'const away = r !== "main" && !lane && !(st && st.written);' in code, "an agent not started waits in the break room"
+    assert 'post("api/answer", { wt: turn.wt, session: turn.session, agent: turn.agent, qid: turn.qid, message: text })' in code and "mh.alert.held" in code, "the session's held turn is answered from the chat under the map"
+    assert "if (turn && chatQueue && chatQueue.wt === wtN)" in code, "a message written while the session works goes when its turn comes"
+    assert "cmdBlock(`cd ${q(c.path)} && claude ${q(text)}`)" in code, "with no session, the chat writes the whole command"
+    assert all(k in d["pt"] for k in ("room.lounge", "chat.title", "chat.working", "chat.off", "site.full"))
+    assert "function findPath(wr, from, to)" in code and "a.path = findPath(world, [a.x, a.y], goal);" in code, "people walk around walls and furniture"
+    assert "let best = null, bd = 2.3;" in code and "openBot = near; nearOpened = true;" in code, "coming close to someone opens their card"
+    assert all(k in d["pt"] for k in ("office.foreman", "world.near", "world.alone", "world.goto"))
 
 
 def findings_panel(page):
@@ -406,6 +414,11 @@ MUTATIONS = (
     (switches_on_page, "posts on the first click", lambda p: p.replace('const dlg = $("dlg");\n  dlg.innerHTML = `<h3>${t("switch.confirm.title."', 'post("api/switch", { wt, name, on });\n  const dlg = $("dlg");\n  dlg.innerHTML = `<h3>${t("switch.confirm.title."')),
     (tree, "no you-are-here", lambda p: p.replace('const here = i === now ? `<span class="you">', 'const here = false ? `<span class="you">')),
     (office, "QA has no desk", lambda p: p.replace('"security-reviewer", "qa-reviewer", "product-reviewer"] }', '"security-reviewer", "product-reviewer"] }')),
+    (office, "nobody in the break room", lambda p: p.replace('const away = r !== "main" && !lane', 'const away = false && !lane')),
+    (office, "no chat under the map", lambda p: p.replace("message: text })", "message: \"\" })")),
+    (office, "queue never sent", lambda p: p.replace("if (turn && chatQueue && chatQueue.wt === wtN)", "if (false)")),
+    (office, "nobody comes close", lambda p: p.replace("let best = null, bd = 2.3;", "let best = null, bd = 0;")),
+    (office, "walking through walls", lambda p: p.replace("a.path = findPath(world, [a.x, a.y], goal);", "a.path = [goal];")),
     (office, "custom agents unnamed", lambda p: p.replace("String(pick(agentCfg(a).label) || a)", "String(a)")),
     (findings_panel, "choice on every finding", lambda p: p.replace('const choose = x.view === "needs-you" && x.state === "open"', "const choose = true")),
     (findings_panel, "posted on the click", lambda p: p.replace("staged.get(k) === b.dataset.stage ? staged.delete(k) : staged.set(k, b.dataset.stage);", 'post("api/findings-decision", { wt: sel.wt, id: d.id, key: x.key, decision: b.dataset.stage });')),

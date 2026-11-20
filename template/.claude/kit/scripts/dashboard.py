@@ -11,6 +11,8 @@ directory of each worktree from `git worktree list` and serves:
   GET  /api/tasks                    every task, with its status, grouped by worktree
   GET  /api/task?wt=<n>&id=<ID>      purpose, stage files and events of one task
   GET  /api/attention                sessions waiting on the dev, per worktree (hooks/attention.py)
+  GET  /api/worktrees                every worktree, with or without a task: its path, its switches
+                                     and whether a Claude session is alive there (the page's chat)
   GET  /api/cleanup-plan?wt=<n>&id=<ID> | ?all=done
                                      what a cleanup of done tasks would delete, and what it refuses
   GET  /api/events                   Server-Sent Events: "change" when a work dir changes, so a
@@ -1730,6 +1732,19 @@ def close_task(root, body, now=None):
 SWITCHES = {"answers": "answers-on", "turns": "turns-on"}
 
 
+def list_worktrees(root, now=None):
+    """Every worktree of the repository, with or without a task, for the page's chat: where a
+    message to a session goes, whether one is alive there, and its switches."""
+    now = time.time() if now is None else now
+    out = []
+    for i, (wt, branch) in enumerate(worktrees(root)):
+        wdir = work_dir(wt)
+        out.append({"wt": i, "name": os.path.basename(wt), "branch": branch, "path": wt,
+                    "here": os.path.realpath(wt) == os.path.realpath(root),
+                    "live": bool(wdir) and live_session(wdir, now), "switches": switches_of(wt)})
+    return out
+
+
 def switches_of(wt):
     wdir = work_dir(wt)
     adir = os.path.join(wdir, "attention") if wdir else None
@@ -2026,6 +2041,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if url.path == "/api/attention":
             visible = q.get("visible") == ["1"]
             return self.send(200, json.dumps(list_attention(self.root, visible=visible)), "application/json")
+        if url.path == "/api/worktrees":
+            return self.send(200, json.dumps(list_worktrees(self.root)), "application/json")
         if url.path in ("/api/answer", "/api/cleanup", "/api/close", "/api/findings-decision", "/api/switch"):
             return self.refuse_method()
         if url.path == "/api/cleanup-plan":
