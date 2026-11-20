@@ -134,7 +134,7 @@ def answers_from_the_page(page):
     """A question, a permission (allow or deny) and a session's turn (a message) are answered on
     the page while held, through /api/answer with the token; not held, the page says where."""
     code = script(page)
-    assert 'const post = (path, body) => fetch(path, { method: "POST", headers: { "Content-Type": "application/json", "X-Kit-Token": TOKEN }' in code
+    assert 'const post = (path, body) => fetch(scoped(path), { method: "POST", headers: { "Content-Type": "application/json", "X-Kit-Token": TOKEN }' in code
     assert 'post("api/answer", { wt: a.wt, session: a.session, agent: a.agent, qid: a.qid, ...extra })' in code
     for part in ('{ behavior: "allow" }', '{ behavior: "deny" }', "{ message: text }", "{ release: true }", "{ answers }"):
         assert part in code, f"the page must send {part}"
@@ -158,9 +158,25 @@ def office(page):
     assert "String(pick(agentCfg(a).label) || a)" in code, "an agent the dev added shows its own label"
     assert "const alert = g && g.alerts.find(a => a.agent === lane.agent" in code, "a hand belongs to the agent that raised the alert"
     assert "hand ? '<span class=\"bubble hand\"" in code, "an agent waiting on the dev raises its hand"
-    assert "alertBody(hand.alert, 0)" in code and "wireAlerts(pop, [hand.alert])" in code, "the request is answered from the robot"
+    assert 'alertBody(hand.alert, 0, "p")' in code and 'wireAlerts(pop, [hand.alert], "p")' in code, "the request is answered from the robot"
+    # The same question shows in more than one box: radios group by name across the page, so each
+    # box names its own, or checking one unchecks the other.
+    assert 'name="${p}a${n}q${i}" value="${j}"' in code and 'input[name="${p}a${n}q${i}"]:checked' in code, "radio names per box"
+    # The robot's card is redrawn only when its content changes: its clocks are filled after, or a
+    # redraw every tick wipes what the dev was marking.
+    pop = code[code.index("function showPop"):code.index("function purposeText")]
+    drawn = pop[pop.index("let html ="):pop.index("if (pop.dataset.html !== html)")]
+    assert "<span data-when></span>" in drawn and "ago(" not in drawn and "when ?" not in drawn, "no clock in the redraw check"
     assert "const here = stepRoom(list[now]);" in code, "the task stands in the room of its current step"
     assert all(k in d["pt"] for k in ("office.hand", "pop.blocked", "pop.idle"))
+    assert 'const away = r !== "main" && !lane && !(st && st.written);' in code, "an agent not started waits in the break room"
+    assert 'post("api/answer", { wt: turn.wt, session: turn.session, agent: turn.agent, qid: turn.qid, message: text })' in code and "mh.alert.held" in code, "the session's held turn is answered from the chat under the map"
+    assert "if (turn && chatQueue && chatQueue.wt === wtN)" in code, "a message written while the session works goes when its turn comes"
+    assert "cmdBlock(`cd ${q(c.path)} && claude ${q(text)}`)" in code, "with no session, the chat writes the whole command"
+    assert all(k in d["pt"] for k in ("room.lounge", "chat.title", "chat.working", "chat.off", "site.full"))
+    assert "function findPath(wr, from, to)" in code and "a.path = findPath(world, [a.x, a.y], goal);" in code, "people walk around walls and furniture"
+    assert "let best = null, bd = 2.3;" in code and "openBot = near; nearOpened = true;" in code, "coming close to someone opens their card"
+    assert all(k in d["pt"] for k in ("office.foreman", "world.near", "world.alone", "world.goto"))
 
 
 def findings_panel(page):
@@ -192,6 +208,7 @@ def now_panel(page):
     assert 't(act ? "now.act" : "now.wait")' in n and "const act = items.length > 0;" in n
     assert "alertBody(" not in n and "findingRow" not in n, "Now repeats no alert and no finding"
     assert 't("needs.mine", { n: mine.length })' in n and "decideIn(+b.dataset.decide, b.dataset.id)" in n
+    assert "wireFindings($(\"now\"), d)" in n, "open findings are decided in Now"
     assert 'l.state === "running" && l.type !== "main"' in n, "WAIT says which agents work"
 
 
@@ -203,7 +220,7 @@ def needs_list(page):
     assert 'const NEED_GROUPS = ["answer", "approve", "decide", "ship"];' in code
     b = code[code.index("function buildNeeds"):code.index("function needRowHTML")]
     assert 'a.awaits === false ? "progress" : a.idle ? "idle" : a.kind === "permission" ? "approve" : "answer"' in b
-    sh = code[code.index("function showNeeds"):code.index("function decideIn")]
+    sh = code[code.index("function showAttention"):code.index("function decideIn")]
     assert 'needCount = needItems.filter(i => NEED_GROUPS.includes(i.group)).length;' in sh
     assert 'document.title = (needCount ? `(${needCount}) ` : "") + "Foreman";' in sh
     assert "const pending = (wt) => needItems.filter(i => i.wt === wt && NEED_GROUPS.includes(i.group)).length;" in code
@@ -345,7 +362,7 @@ def noise_collapsed(page):
     pop = code[code.index("function showPop"):code.index("function purposeText")]
     inner = pop[pop.index("<details><summary>"):]
     inner = inner[:inner.index("</details>")]
-    assert 't("lane.id"' in inner and "lane.last" in inner, "the agent id and last tool call stay in the robot's <details>"
+    assert "data-laneid" in inner and "lane.last" in inner, "the agent id and last tool call stay in the robot's <details>"
 
 
 def cleanup_wiring(page):
@@ -366,7 +383,10 @@ def preferences(page):
         assert re.search(r"try \{[^}\n]*localStorage\.getItem\(" + key, page) and re.search(r"try \{ localStorage\.setItem\(" + key, page), key
     assert 'document.documentElement.lang = lang === "pt" ? "pt-BR" : "en"' in page
     assert "attn === null || TOKEN === PLACEHOLDER" in page and 'const PLACEHOLDER = "__KIT_" + "TOKEN__";' in page
-    assert 'new EventSource("api/events?t=" + encodeURIComponent(TOKEN))' in page and "startPoll()" in page, "live stream with a poll fallback"
+    assert 'new EventSource(scoped("api/events?t=" + encodeURIComponent(TOKEN)))' in page and "startPoll()" in page, "live stream with a poll fallback"
+    assert "const getJSON = async (p) => { const r = await fetch(scoped(p));" in page, "every read names the project on screen"
+    assert 'path.startsWith("api/projects") ? path' in page and "x.p !== proj && x.pending > (projSeen[x.root] ?? x.pending)" in page, \
+        "the project list is not scoped, and another project that starts waiting on the dev chimes"
 
 
 CHECKS = (calm_panel, top_bar, sidebar, needs_list, findings_fold, whole_finding, quiet_turns, whole_turn, visible_page, released_holds, not_applicable, both_languages, every_word_translated, whole_commands, answers_from_the_page, office, findings_panel, now_panel, tree, switches_on_page,
@@ -393,6 +413,8 @@ MUTATIONS = (
     (answers_from_the_page, "no deny", lambda p: p.replace('{ behavior: "deny" }', '{ behavior: "allow" }')),
     (answers_from_the_page, "allow on a permission not held", lambda p: p.replace('(a.held ? `<div class="actions"><button class="primary" data-allow=', '(true ? `<div class="actions"><button class="primary" data-allow=')),
     (answers_from_the_page, "no token", lambda p: p.replace('"X-Kit-Token": TOKEN }, body: JSON.stringify(body) })', '}, body: JSON.stringify(body) })')),
+    (office, "one radio name for every box", lambda p: p.replace('name="${p}a${n}q${i}" value="${j}"', 'name="a${n}q${i}" value="${j}"')),
+    (office, "clock redraws the card", lambda p: p.replace('<span data-when></span>', '${when ? " · " + when : ""}')),
     (office, "no hand", lambda p: p.replace("hand ? '<span class=\"bubble hand\"", "false ? '<span class=\"bubble hand\"")),
     (now_panel, "always WAIT", lambda p: p.replace('t(act ? "now.act" : "now.wait")', 't("now.wait")')),
     (now_panel, "Now repeats alerts", lambda p: p.replace('if (mine.length) items.push(', 'mine.forEach(a => items.push(alertBody(a, 0)));\n  if (mine.length) items.push(')),
@@ -406,6 +428,11 @@ MUTATIONS = (
     (switches_on_page, "posts on the first click", lambda p: p.replace('const dlg = $("dlg");\n  dlg.innerHTML = `<h3>${t("switch.confirm.title."', 'post("api/switch", { wt, name, on });\n  const dlg = $("dlg");\n  dlg.innerHTML = `<h3>${t("switch.confirm.title."')),
     (tree, "no you-are-here", lambda p: p.replace('const here = i === now ? `<span class="you">', 'const here = false ? `<span class="you">')),
     (office, "QA has no desk", lambda p: p.replace('"security-reviewer", "qa-reviewer", "product-reviewer"] }', '"security-reviewer", "product-reviewer"] }')),
+    (office, "nobody in the break room", lambda p: p.replace('const away = r !== "main" && !lane', 'const away = false && !lane')),
+    (office, "no chat under the map", lambda p: p.replace("message: text })", "message: \"\" })")),
+    (office, "queue never sent", lambda p: p.replace("if (turn && chatQueue && chatQueue.wt === wtN)", "if (false)")),
+    (office, "nobody comes close", lambda p: p.replace("let best = null, bd = 2.3;", "let best = null, bd = 0;")),
+    (office, "walking through walls", lambda p: p.replace("a.path = findPath(world, [a.x, a.y], goal);", "a.path = [goal];")),
     (office, "custom agents unnamed", lambda p: p.replace("String(pick(agentCfg(a).label) || a)", "String(a)")),
     (findings_panel, "choice on every finding", lambda p: p.replace('const choose = x.view === "needs-you" && x.state === "open"', "const choose = true")),
     (findings_panel, "posted on the click", lambda p: p.replace("staged.get(k) === b.dataset.stage ? staged.delete(k) : staged.set(k, b.dataset.stage);", 'post("api/findings-decision", { wt: sel.wt, id: d.id, key: x.key, decision: b.dataset.stage });')),
@@ -416,6 +443,8 @@ MUTATIONS = (
     (cleanup_wiring, "plan hash not sent", lambda p: p.replace("plan: cleanPlan.plan })", "plan: null })")),
     (preferences, "theme outside try", lambda p: p.replace('try { theme = ["light", "dark", "system"].includes(localStorage.getItem(THEME_KEY)) ? localStorage.getItem(THEME_KEY) : "dark" } catch (e) {}', 'theme = localStorage.getItem(THEME_KEY);')),
     (findings_panel, "dismissed alerts not restorable", lambda p: p.replace("dismissed.delete(b.dataset.restore); saveDismissed()", "dismissed.add(b.dataset.restore); saveDismissed()")),
+    (preferences, "reads not scoped", lambda p: p.replace("const r = await fetch(scoped(p));", "const r = await fetch(p);")),
+    (preferences, "other projects silent", lambda p: p.replace("x.p !== proj && x.pending > (projSeen[x.root] ?? x.pending)", "false")),
     (released_holds, "released question disabled", lambda p: p.replace('${a.held || a.released ? "" : " disabled"}', '${a.held ? "" : " disabled"}')),
     (released_holds, "released turn silent", lambda p: p.replace("    : a.released ? goneHTML(a, n)\n    : a.turns", "    : a.turns")),
     (released_holds, "no copy for a turn", lambda p: p.replace("<button type=\"button\" data-copy data-gone-for=", "<button type=\"button\" data-gone-for=")),
@@ -432,7 +461,7 @@ MUTATIONS = (
     (calm_panel, "red badges", lambda p: p.replace("color:#111; background:var(--warn); border-radius:9px", "color:#fff; background:var(--bad); border-radius:9px")),
     (calm_panel, "no fold hint", lambda p: p.replace('el.classList.toggle("fold", over);', "")),
     (not_applicable, "na ignored", lambda p: p.replace("${s.na ? t(\"verdict.na\") : v ?", "${v ?")),
-    (preferences, "no live stream", lambda p: p.replace('new EventSource("api/events?t=" + encodeURIComponent(TOKEN))', 'new EventSource("api/events")')),
+    (preferences, "no live stream", lambda p: p.replace('new EventSource(scoped("api/events?t=" + encodeURIComponent(TOKEN)))', 'new EventSource("api/events")')),
 )
 
 

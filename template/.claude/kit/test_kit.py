@@ -62,6 +62,17 @@ def launch(root, agent_type, prompt="work dir .work/TASK-1"):
 
 
 def main():
+    # The registry of projects (one dashboard serves them all) goes to a temporary home: the
+    # checks never touch the dev's ~/.foreman.
+    home = tempfile.mkdtemp()
+    os.environ["FOREMAN_HOME"] = home
+    try:
+        checks()
+    finally:
+        shutil.rmtree(home, ignore_errors=True)
+
+
+def checks():
     root = tempfile.mkdtemp()
     try:
         shutil.copytree(CLAUDE, os.path.join(root, ".claude"), ignore=shutil.ignore_patterns("__pycache__"))
@@ -276,8 +287,70 @@ def main():
     rooms_and_agents()
     switches()
     closing_docs()
+    projects_server()
     print("ok: gates, readiness, fix-round cap, event log, review package, exports, eval graders, dashboard,"
-          " learnings, merge order, attention alerts, web answers, hook wiring, closing and cleanup")
+          " learnings, merge order, attention alerts, web answers, hook wiring, closing and cleanup, one dashboard for every project")
+
+
+def projects_server():
+    """One dashboard serves every registered project: /api/projects lists them with their alert
+    counts, ?p=<index> picks one for every other endpoint, an unknown index is a 404, and only the
+    project on screen counts as an open page for the holds."""
+    import http.client
+    import threading
+    d = load_dashboard("dashboard_projects")
+    base = tempfile.mkdtemp()
+    old_home = os.environ.get("FOREMAN_HOME")
+    os.environ["FOREMAN_HOME"] = os.path.join(base, "home")
+    try:
+        roots = []
+        for name in ("alpha", "beta"):
+            r = os.path.join(base, name)
+            os.makedirs(os.path.join(r, ".claude"))
+            shutil.copy(FLOW, os.path.join(r, ".claude", "flow.json"))
+            subprocess.run(["git", "init", "-q", r], check=True, capture_output=True)
+            subprocess.run(["git", "-C", r, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "--allow-empty", "-m", "i"], check=True, capture_output=True)
+            roots.append(os.path.realpath(r))
+        alpha, beta = roots
+        assert not d.register(base), "a directory without Foreman is not registered"
+        assert d.register(beta) and d.register(beta), "registering twice keeps one entry"
+        assert [x["root"] for x in d.read_registry()] == [beta], d.read_registry()
+        assert d.project_roots(alpha) == [alpha, beta], "the server's own project and the registry's, by path"
+        os.makedirs(os.path.join(beta, ".work", "TASK-B"))
+        open(os.path.join(beta, ".work", "TASK-B", "00-purpose.md"), "w").write("# TASK-B beta work\n")
+        adir = os.path.join(beta, ".work", "attention", "s1")
+        os.makedirs(adir)
+        now = time.time()
+        open(os.path.join(adir, "main.json"), "w").write(json.dumps({"kind": "turn", "since": now, "detail": "", "claude_pid": os.getpid()}))
+        listed = d.list_projects(alpha, now)
+        assert [(x["name"], x["here"], x["pending"]) for x in listed] == [("alpha", True, 0), ("beta", False, 1)], listed
+        assert not os.path.exists(os.path.join(beta, ".work", "attention", ".page")), "counting alerts must not open the page"
+        handler = type("H", (d.Handler,), {"root": alpha, "token": "t" * 24})
+        server = d.http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            def get(path):
+                c = http.client.HTTPConnection("127.0.0.1", server.server_port, timeout=10)
+                c.request("GET", path, headers={"Host": "localhost"})
+                r = c.getresponse()
+                return r.status, r.read().decode()
+            code, body = get("/api/tasks")
+            assert code == 200 and json.loads(body) == [], "without ?p: the server's own project"
+            code, body = get("/api/tasks?p=1")
+            assert code == 200 and [t["id"] for g in json.loads(body) for t in g["tasks"]] == ["TASK-B"], body
+            assert get("/api/tasks?p=7")[0] == 404 and get("/flow.json?p=7")[0] == 404, "an unknown project is a 404"
+            code, body = get("/api/projects")
+            assert code == 200 and [x["name"] for x in json.loads(body)] == ["alpha", "beta"], body
+            assert get("/api/attention?p=1&visible=1")[0] == 200 and os.path.exists(os.path.join(beta, ".work", "attention", ".page")), \
+                "the project on screen counts as an open page"
+        finally:
+            server.shutdown()
+    finally:
+        if old_home is None:
+            os.environ.pop("FOREMAN_HOME", None)
+        else:
+            os.environ["FOREMAN_HOME"] = old_home
+        shutil.rmtree(base, ignore_errors=True)
 
 
 def merge_order():
@@ -599,12 +672,40 @@ def attention_hooks():
         hook(root, {"hook_event_name": "Stop", "session_id": "s1", "last_assistant_message": "done, token=abc123"})
         t = load("s1")
         assert t["kind"] == "turn" and "abc123" not in t["detail"], t
+        long = "word " * 400 + "THE END"
+        hook(root, {"hook_event_name": "Stop", "session_id": "s1", "last_assistant_message": long})
+        assert load("s1")["detail"].endswith("THE END"), "a turn keeps the whole message: the chat shows it"
         hook(root, {**perm, "agent_id": "a1"})
         hook(root, {"hook_event_name": "UserPromptSubmit", "session_id": "s1", "prompt": "go"})
         # Every alert goes; what stays is the session marker, which says a session lives there.
         assert os.listdir(os.path.join(att, "s1")) == [".session"], "UserPromptSubmit must clear the whole session"
         marker = json.load(open(os.path.join(att, "s1", ".session")))
         assert isinstance(marker["since"], float) and "claude_pid" in marker, marker
+        # A session just opened waits in its terminal: the page cannot reach it until its first Stop,
+        # and the chat says so instead of queueing a message that never goes.
+        dash = load_dashboard("dash_fresh")
+        wdir = os.path.join(root, ".work")
+        assert marker["fresh"] is False, "a prompted session is not fresh"
+        others = [x for x in os.listdir(att) if x != "s1" and os.path.isdir(os.path.join(att, x))]
+        saved = {x: json.load(open(os.path.join(att, x, ".session"))) for x in others
+                 if os.path.exists(os.path.join(att, x, ".session"))}
+        for x in saved:  # another live session that took a prompt is not fresh: it hides s1's state
+            os.remove(os.path.join(att, x, ".session"))
+        def alive_marker():  # the hook's parent is gone by now: this process stands in for Claude
+            mp = os.path.join(att, "s1", ".session")
+            m = json.load(open(mp)); m["claude_pid"] = os.getpid(); json.dump(m, open(mp, "w"))
+        hook(root, {"hook_event_name": "SessionStart", "session_id": "s1", "source": "startup"})
+        alive_marker()
+        assert dash.fresh_session(wdir, time.time()), "an opened session that took no prompt is fresh"
+        hook(root, {"hook_event_name": "SessionStart", "session_id": "s1", "source": "compact"})
+        alive_marker()
+        assert not dash.fresh_session(wdir, time.time()), "a compaction restarts mid-turn: not fresh"
+        hook(root, {"hook_event_name": "SessionStart", "session_id": "s1", "source": "startup"})
+        hook(root, {"hook_event_name": "UserPromptSubmit", "session_id": "s1", "prompt": "go"})
+        alive_marker()
+        assert not dash.fresh_session(wdir, time.time()), "a prompt ends fresh"
+        for x, m in saved.items():
+            json.dump(m, open(os.path.join(att, x, ".session"), "w"))
         for ev in ("SessionEnd", "SessionStart"):
             hook(root, {"hook_event_name": "Stop", "session_id": "s2"})
             hook(root, {**perm, "session_id": "s2"})
@@ -1032,7 +1133,9 @@ def wiring():
     gone = {"type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/kit/scripts/cleanup.py\" --hook"}
     old = {"hooks": {"SessionStart": [{"hooks": [gone]}], "PreToolUse": [guard, {"matcher": "*", "hooks": [flow_cmd]},
                                                                       {"matcher": "AskUserQuestion", "hooks": [old_hold]}],
-                     "SubagentStart": [{"hooks": [flow_cmd]}], "SubagentStop": [{"hooks": [flow_cmd]}]}}
+                     "SubagentStart": [{"hooks": [flow_cmd]}], "SubagentStop": [{"hooks": [flow_cmd]}],
+                     # An older kit wired the turn with 600 s: the upgrade must raise it, not add a second one.
+                     "Stop": [{"hooks": [{"type": "command", "command": w.TURN, "timeout": 600}]}]}}
     d = tempfile.mkdtemp()
     try:
         path = os.path.join(d, "settings.json")
@@ -1051,11 +1154,11 @@ def wiring():
                                ("UserPromptSubmit", None), ("SessionEnd", None)):
             assert len(entry(event, matcher)) == 1, f"{event} {matcher} was not wired"
         # Permission dialogs and the main session's turn are held for the page: their own entry,
-        # with the 3600 s timeout the 3570 s hold stays under.
-        for event, arg in (("PermissionRequest", "permission"), ("Stop", "turn")):
+        # with the 3600 s timeout the 3570 s hold stays under; the turn's 8 h lets chat reach an idle session.
+        for event, arg, limit in (("PermissionRequest", "permission", 3600), ("Stop", "turn", 8 * 3600)):
             got = entry(event, None)
             held = [h for h in got if h["command"].endswith(f'attention.py\" {arg}')]
-            assert len(got) == 2 and len(held) == 1 and held[0]["timeout"] == 3600, f"{event}: {got}"
+            assert len(got) == 2 and len(held) == 1 and held[0]["timeout"] == limit, f"{event}: {got}"
         starts = [h["command"] for h in entry("SessionStart", None)]
         assert len(starts) == 2 and any("dashboard.py\" hook" in c for c in starts), starts
         assert not any("cleanup.py" in h["command"] for g in s.values() for x in g for h in x["hooks"]), \
@@ -2679,7 +2782,8 @@ def turn_holds():
         os.makedirs(os.path.dirname(marker))
         open(marker, "w").close()
         out, took = quick("i2", "Contract written. Go on?")
-        assert out == "" and took < 5 and alert("i2")["held"] is False, "never held while a subagent of the session runs"
+        assert out == "" and took < 5 and not os.path.exists(os.path.join(adir, "i2", "main.json")), \
+            "a session with a running subagent does not raise a turn alert"
         old = time.time() - 20 * 60
         os.utime(marker, (old, old))
         # A subagent's tool call refreshes its marker; the main session's does not create one.
@@ -2966,6 +3070,15 @@ def page_holds():
         out = json.loads(finish(proc))
         assert out["decision"] == "block" and out["reason"].endswith("yes, go on"), out
         assert not os.path.exists(os.path.join(adir, "t1", "main.json")), "an answered turn clears its alert"
+        # A turn that ends while a background subagent runs waits for that subagent, not the dev:
+        # a hold would keep its "done" notice from waking the session, and the flow would stall.
+        os.makedirs(os.path.join(adir, "t1", ".running"), exist_ok=True)
+        open(os.path.join(adir, "t1", ".running", "ag1"), "w").close()
+        t0 = time.monotonic()
+        p = subprocess.run([sys.executable, ATTN, "turn"], input=json.dumps(stop), capture_output=True, text=True, env=env)
+        assert p.stdout == "" and time.monotonic() - t0 < 5, "a Stop with a subagent running must not be held"
+        assert not os.path.exists(os.path.join(adir, "t1", "main.json")), "nor raise a turn alert"
+        shutil.rmtree(os.path.join(adir, "t1", ".running"))
         # A subagent's stop is never held.
         p = subprocess.run([sys.executable, ATTN, "turn"], input=json.dumps({**stop, "agent_id": "a9"}), capture_output=True, text=True, env=env)
         assert p.stdout == ""

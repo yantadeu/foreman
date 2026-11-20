@@ -11,6 +11,17 @@ directory of each worktree from `git worktree list` and serves:
   GET  /api/tasks                    every task, with its status, grouped by worktree
   GET  /api/task?wt=<n>&id=<ID>      purpose, stage files and events of one task
   GET  /api/attention                sessions waiting on the dev, per worktree (hooks/attention.py)
+  GET  /api/worktrees                every worktree, with or without a task: its path, its switches
+                                     and whether a Claude session is alive there (the page's chat)
+  GET  /api/projects                 every project of the registry (one dashboard serves them all):
+                                     its name, its alert count, whether a session is alive there
+
+One server serves every project with Foreman on this machine. The projects register themselves in
+~/.foreman/projects.json ($FOREMAN_HOME): on a session start (the SessionStart hook), when a
+server starts, and on `work.sh ui start`, which reuses a running server instead of starting a
+second one. The page picks a project with ?p=<index in that list>, never by a path; without ?p,
+the server's own project. Only the project on screen counts as "the page is open" for the holds
+of attention.py: a project in another tab of the picker never waits on the page.
   GET  /api/cleanup-plan?wt=<n>&id=<ID> | ?all=done
                                      what a cleanup of done tasks would delete, and what it refuses
   GET  /api/events                   Server-Sent Events: "change" when a work dir changes, so a
@@ -1476,6 +1487,32 @@ def live_session(wdir, now):
     return any(now - e["t"] < STALE_AFTER for evs in events(wdir).values() for e in evs)
 
 
+def fresh_session(wdir, now):
+    """True when every live session here is fresh (opened and not yet prompted): it waits in its
+    terminal, and the page reaches it only after its first Stop. The page asks only when no turn
+    alert of the main session is up."""
+    adir = os.path.join(wdir, "attention")
+    try:
+        sessions = [s for s in os.listdir(adir) if safe_id(s)]
+    except OSError:
+        return False
+    seen = False
+    for session in sessions:
+        m = read_json(os.path.join(adir, session, SESSION_MARKER))
+        if not isinstance(m, dict):
+            continue
+        pid = m.get("claude_pid")
+        if isinstance(pid, int) and not isinstance(pid, bool) and pid > 1:
+            if not pid_alive(pid):
+                continue
+        elif not (isinstance(m.get("since"), (int, float)) and now - m["since"] < STALE_AFTER):
+            continue
+        if not m.get("fresh"):
+            return False
+        seen = True
+    return seen
+
+
 def sensitive(rel, work_rel, cleaned_ids, extra_dirs=()):
     """True for an ignored file that nobody can recreate from the remote: a local secret, or the
     state of a task this cleanup does not name."""
@@ -1730,6 +1767,89 @@ def close_task(root, body, now=None):
 SWITCHES = {"answers": "answers-on", "turns": "turns-on"}
 
 
+# ---- the projects of this machine, so one dashboard serves them all
+def registry_path():
+    home = os.environ.get("FOREMAN_HOME") or os.path.join(os.path.expanduser("~"), ".foreman")
+    return os.path.join(home, "projects.json")
+
+
+def read_registry():
+    data = read_json(registry_path())
+    items = data.get("projects") if isinstance(data, dict) else None
+    return [x for x in items if isinstance(x, dict) and isinstance(x.get("root"), str)] if isinstance(items, list) else []
+
+
+def register(root):
+    """Adds a project to the registry (or refreshes it). Never fails: a dashboard that cannot
+    write the registry still serves its own project."""
+    try:
+        root = os.path.realpath(root)
+        if not os.path.isfile(os.path.join(root, ".claude", "flow.json")):
+            return False
+        items = [x for x in read_registry() if os.path.realpath(x["root"]) != root and os.path.isdir(x["root"])]
+        items.append({"root": root, "seen": time.time()})
+        path = registry_path()
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        tmp = f"{path}.tmp-{os.getpid()}"
+        with open(tmp, "w") as f:
+            json.dump({"projects": items}, f, indent=1)
+        os.replace(tmp, path)
+        return True
+    except OSError:
+        return False
+
+
+def project_roots(own):
+    """The projects this server serves, in a stable order (by path): the registry's that still
+    have Foreman, and its own."""
+    own = os.path.realpath(own)
+    roots = {own}
+    for x in read_registry():
+        r = os.path.realpath(x["root"])
+        if os.path.isfile(os.path.join(r, ".claude", "flow.json")):
+            roots.add(r)
+    return sorted(roots)
+
+
+def alert_count(root, now):
+    """Alerts of every worktree of a project, read without marking its page open."""
+    n = 0
+    for wt, _ in worktrees(root):
+        wdir = work_dir(wt)
+        if wdir:
+            n += len(alerts(wdir, now))
+    return n
+
+
+def list_projects(own, now=None):
+    now = time.time() if now is None else now
+    out = []
+    for i, r in enumerate(project_roots(own)):
+        try:
+            wdirs = [work_dir(wt) for wt, _ in worktrees(r)]
+            live = any(w and live_session(w, now) for w in wdirs)
+            pending = alert_count(r, now)
+        except Exception:  # noqa: BLE001 - one broken project must not hide the others
+            live, pending = False, 0
+        out.append({"p": i, "name": os.path.basename(r), "root": r, "here": r == os.path.realpath(own),
+                    "live": live, "pending": pending})
+    return out
+
+
+def list_worktrees(root, now=None):
+    """Every worktree of the repository, with or without a task, for the page's chat: where a
+    message to a session goes, whether one is alive there, and its switches."""
+    now = time.time() if now is None else now
+    out = []
+    for i, (wt, branch) in enumerate(worktrees(root)):
+        wdir = work_dir(wt)
+        out.append({"wt": i, "name": os.path.basename(wt), "branch": branch, "path": wt,
+                    "here": os.path.realpath(wt) == os.path.realpath(root),
+                    "live": bool(wdir) and live_session(wdir, now),
+                    "fresh": bool(wdir) and fresh_session(wdir, now), "switches": switches_of(wt)})
+    return out
+
+
 def switches_of(wt):
     wdir = work_dir(wt)
     adir = os.path.join(wdir, "attention") if wdir else None
@@ -1952,6 +2072,18 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     do_PUT = do_DELETE = do_PATCH = do_OPTIONS = refuse_method
 
+    def project(self):
+        """The root of the project this request is about: ?p=<index>, else the server's own."""
+        q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+        try:
+            i = int((q.get("p") or ["-1"])[0])
+        except ValueError:
+            i = -1
+        if i < 0:
+            return self.root
+        roots = project_roots(self.root)
+        return roots[i] if i < len(roots) else None
+
     def local_host(self):
         # Refuses any Host other than localhost: a DNS-rebinding page in the browser could
         # otherwise read the contracts and the event log.
@@ -1987,21 +2119,24 @@ class Handler(http.server.BaseHTTPRequestHandler):
             body = json.loads(self.rfile.read(length))
         except ValueError:
             return err(400, "body is not JSON")
+        root = self.project()
+        if root is None:
+            return err(404, "no such project")
         if path == "/api/cleanup":
-            code, out = cleanup_execute(self.root, body)
+            code, out = cleanup_execute(root, body)
             return self.send(code, json.dumps(out), "application/json")
         if path == "/api/close":
-            code, out = close_task(self.root, body)
+            code, out = close_task(root, body)
             return self.send(code, json.dumps(out), "application/json")
         if path == "/api/switch":
-            code, out = set_switch(self.root, body)
+            code, out = set_switch(root, body)
             return self.send(code, json.dumps(out), "application/json")
         if path == "/api/findings-decision":
-            code, out = decide_finding(self.root, body)
+            code, out = decide_finding(root, body)
             if code == 200:
-                notify_session(self.root, body)
+                notify_session(root, body)
             return self.send(code, json.dumps(out), "application/json")
-        code, msg = answer(self.root, body)
+        code, msg = answer(root, body)
         if code != 200:
             return err(code, msg)
         return self.send(200, json.dumps({"ok": True}), "application/json")
@@ -2022,33 +2157,43 @@ class Handler(http.server.BaseHTTPRequestHandler):
             token_ok = bool(self.token) and hmac.compare_digest(sent.encode(), self.token.encode())
             if not token_ok and not self.local_origin():
                 return self.send(403, json.dumps({"error": "the event stream needs the page's token"}), "application/json")
-            return self.event_stream()
+            root = self.project()
+            if root is None:
+                return self.send(404, json.dumps({"error": "no such project"}), "application/json")
+            return self.event_stream(root)
+        if url.path == "/api/projects":
+            return self.send(200, json.dumps(list_projects(self.root)), "application/json")
+        root = self.project()
+        if root is None and (url.path.startswith("/api/") or url.path == "/flow.json"):
+            return self.send(404, json.dumps({"error": "no such project"}), "application/json")
         if url.path == "/api/attention":
             visible = q.get("visible") == ["1"]
-            return self.send(200, json.dumps(list_attention(self.root, visible=visible)), "application/json")
+            return self.send(200, json.dumps(list_attention(root, visible=visible)), "application/json")
+        if url.path == "/api/worktrees":
+            return self.send(200, json.dumps(list_worktrees(root)), "application/json")
         if url.path in ("/api/answer", "/api/cleanup", "/api/close", "/api/findings-decision", "/api/switch"):
             return self.refuse_method()
         if url.path == "/api/cleanup-plan":
             if (q.get("all") or [""])[0] == "done":
-                return self.send(200, json.dumps(cleanup_plan(self.root, "all-done")), "application/json")
+                return self.send(200, json.dumps(cleanup_plan(root, "all-done")), "application/json")
             try:
                 wt = int((q.get("wt") or ["-1"])[0])
             except ValueError:
                 wt = -1
-            plan = cleanup_plan(self.root, [(wt, (q.get("id") or [""])[0])])
+            plan = cleanup_plan(root, [(wt, (q.get("id") or [""])[0])])
             if plan["targets"][0]["refused"] == "no-such-task":
                 return self.send(404, json.dumps({"error": "no such task"}), "application/json")
             return self.send(200, json.dumps(plan), "application/json")
         if url.path == "/flow.json":
-            return self.send(200, json.dumps(flow_of(self.root)), "application/json")
+            return self.send(200, json.dumps(flow_of(root)), "application/json")
         if url.path == "/api/tasks":
-            return self.send(200, json.dumps(list_tasks(self.root)), "application/json")
+            return self.send(200, json.dumps(list_tasks(root)), "application/json")
         if url.path == "/api/task":
             try:
                 wt = int((q.get("wt") or ["-1"])[0])
             except ValueError:
                 wt = -1
-            detail = task_detail(self.root, wt, (q.get("id") or [""])[0])
+            detail = task_detail(root, wt, (q.get("id") or [""])[0])
             if detail is None:
                 return self.send(404, json.dumps({"error": "no such task"}), "application/json")
             return self.send(200, json.dumps(detail), "application/json")
@@ -2062,7 +2207,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         except OSError:
             return True
 
-    def event_stream(self):
+    def event_stream(self, root):
         """text/event-stream: `hello` at once, `change` when change_signature moves, a `: ping`
         comment every EVENTS_HEARTBEAT. Read-only, like every GET: no token, the Host check in
         route() only. Events carry a counter, never paths or content."""
@@ -2079,7 +2224,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_header("X-Frame-Options", "DENY")
             self.send_header("Content-Security-Policy", "frame-ancestors 'none'")
             self.end_headers()
-            seq, last = 0, change_signature(self.root)
+            # The project on screen, and the alert counts of the others (their badges).
+            sig_of = lambda: (change_signature(root), tuple(x["pending"] for x in list_projects(self.root)))
+            seq, last = 0, sig_of()
             start = beat = time.monotonic()
             self.wfile.write(f"retry: 2000\nevent: hello\ndata: {json.dumps({'seq': seq})}\n\n".encode())
             self.wfile.flush()
@@ -2087,8 +2234,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 time.sleep(EVENTS_TICK)
                 if self.client_gone():
                     return
-                touch_pages(self.root)
-                sig = change_signature(self.root)
+                touch_pages(root)
+                sig = sig_of()
                 if sig != last:
                     seq, last = seq + 1, sig
                     self.wfile.write(f"event: change\ndata: {json.dumps({'seq': seq})}\n\n".encode())
@@ -2107,6 +2254,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
 
 def serve(root, port):
+    register(root)
     # A new token per server: the page carries it, and nothing else that the server returns does.
     handler = type("BoundHandler", (Handler,), {"root": root, "token": secrets.token_urlsafe(32)})
     server = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
@@ -2226,7 +2374,8 @@ def language_line(root):
 def hook_cli(root):
     """SessionStart: the dev's language, and the finished tasks of every worktree so the session
     offers the cleanup. Git and the `closed` marker only, no forge call: a session start must stay
-    fast, and it must never fail."""
+    fast, and it must never fail. It also registers the project for the one dashboard."""
+    register(root)
     try:
         line = language_line(root)
         if line:
@@ -2254,6 +2403,8 @@ if __name__ == "__main__":
             print("usage: dashboard.py cleanup <root> <ID>|--all-done [--state] [--worktree] [--memory]", file=sys.stderr)
             sys.exit(1)
         sys.exit(cleanup_cli(sys.argv[2:]))
+    if sys.argv[1:2] == ["register"] and len(sys.argv) == 3:
+        sys.exit(0 if register(sys.argv[2]) else 1)
     if sys.argv[1:2] == ["hook"]:
         sys.exit(hook_cli(sys.argv[2] if len(sys.argv) > 2 else os.environ.get("CLAUDE_PROJECT_DIR", ".")))
     serve(sys.argv[1], int(sys.argv[2]))

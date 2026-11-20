@@ -7,11 +7,11 @@ agents (Claude Code, Cursor, Codex, GitHub Copilot) work on a task in stages: sp
 implement, test, review, learn. Each stage writes its result to a file, and scripts check those
 files before the next stage may start. Four reviewers check the result from different angles:
 the contract, security, QA and product. A local dashboard shows every task as a tree of steps
-and as a construction site where each agent is a robot in a hard hat; whatever needs you raises its hand,
-and you answer it on the page.
+and as a pixel-art construction site where you walk among the agents, workers in hard hats;
+whatever needs you raises its hand, and you answer it on the page or in the chat with the session.
 
-<p align="center"><img src="assets/foreman-tour.gif" alt="A tour of the Foreman dashboard: the Now panel, the steps tree, the construction site in the dark and the light theme, and the page in Portuguese" width="900"></p>
-<p align="center"><sub>Now · Steps · Site (dark) · Site (light) · the same page in Portuguese. Stills below, in <a href="#the-dashboard">The dashboard</a>.</sub></p>
+<p align="center"><img src="assets/screenshots/site.jpg" alt="The Foreman dashboard: a pixel-art virtual office where the four reviewers walk to the inspection room, your avatar in the hall, the crew panel beside the map and the chat with the main session under it" width="900"></p>
+<p align="center"><sub>The site during a review: the four reviewers walk to the inspection room, the foreman hands out the task, and the chat with the main session stays open under the map. Stills below, in <a href="#the-dashboard">The dashboard</a>.</sub></p>
 
 
 It does not depend on a task tracker or a documentation tool, and works without either: you
@@ -83,11 +83,16 @@ setup.
   the moment you decide. No message to type.
 - **See where the task is.** The task is a tree of steps (purpose, contract, change, proof,
   reviews, decision, retrospective, closed) with "you are here" on the current one; each review
-  carries its findings, and a step's file opens under it. The Site tab shows the same task as
-  a construction site: one room per stage (drafting room, building site, inspection, site
-  office), each agent a robot in a hard hat at its station with a name tag (the foreman, your
-  main session, wears white), a bubble
-  while it works and a raised hand when it needs you.
+  carries its findings, and a step's file opens under it, in the Task panel beside the map. The
+  map shows the same task as a virtual office in the style of Gather, in pixel art: one room per stage (drafting room,
+  building site, inspection, site office) and a break room. You walk your own avatar (WASD, the
+  arrows, or a click), and the camera follows you, with zoom and a minimap. The crew wear hard
+  hats in their role's color, and the foreman (your main session) wears white. They walk the
+  halls: to their desk when their stage starts, to the foreman with their file when it ends, and
+  to the foreman's office when they raise a hand. Come close to someone and their card opens
+  beside the map, where you answer them. Beside the map, the crew panel lists everyone. Under it,
+  a chat bar sends the main session its next message when it holds its turn for the page.
+  "▶ Simulate" plays a whole task with sample data.
 - **Know when a session waits on you, anywhere.** Every Claude Code session that needs you, in
   any worktree and before any task exists, shows under "waiting on you", with a badge on the
   worktree, the count in the tab title, a beep (with a mute) and a browser notification that
@@ -323,6 +328,14 @@ bash .claude/kit/scripts/work.sh ui start   # background, prints the URL, frees 
 bash .claude/kit/scripts/work.sh ui stop
 ```
 
+One dashboard serves every project with Foreman on your machine. Each project registers itself
+in `~/.foreman/projects.json` when a Claude Code session starts in it, and `ui start` in a second
+project reuses the dashboard already running (it prints that dashboard's link to the project)
+instead of starting another. The project picker in the top bar switches the whole page, map and
+chat included; a project that is not on screen still shows its count of alerts there, and
+chimes when something starts waiting on you. Only the project on screen holds requests for the
+page; the others answer in their terminals as usual.
+
 In Cursor, Codex and Copilot the stages do not launch each other. Run each stage in a new chat
 or session, pick the role (`@agent-refiner` in Cursor, the `refiner` agent in Copilot, or "act
 as `.claude/agents/refiner.md`" in Codex) and give it the work directory. Run
@@ -348,15 +361,15 @@ title. In Codex or Copilot, where there are no slash commands, say "follow
 
 <table>
 <tr>
-<td width="50%"><img src="assets/screenshots/now.jpg" alt="Now: NEEDS YOU, a permission to allow or deny and two findings to fix or accept"><br><sub><b>Now.</b> NEEDS YOU or WAIT. Here: a permission the executor waits for, and two findings only you can move.</sub></td>
-<td width="50%"><img src="assets/screenshots/steps.jpg" alt="Steps: the task as a tree, with each review's findings and who acts on them"><br><sub><b>Steps.</b> The task as a tree, "you are here" on the current step; each review carries its findings and says who acts on each.</sub></td>
+<td width="50%"><img src="assets/screenshots/now.jpg" alt="NEEDS YOU: a permission to allow or deny, while the executor walks to the foreman with its hand up"><br><sub><b>Needs you.</b> The executor asks to run a tool: its hand goes up and it walks to the foreman's office. You allow or deny it in the Task panel; the steps of the task are right under it.</sub></td>
+<td width="50%"><img src="assets/screenshots/crew.jpg" alt="Your avatar next to the foreman: its card opens in the Crew panel and the chat waits for your message"><br><sub><b>Come close.</b> Walk up to someone and their card opens beside the map. Next to the foreman, the chat lights up: the session finished its turn and your message goes straight to it.</sub></td>
 </tr>
 <tr>
-<td width="50%"><img src="assets/screenshots/site.jpg" alt="The construction site at night: one room per stage, robots in hard hats, a raised hand"><br><sub><b>Site.</b> One room per stage, a robot in a hard hat per agent; the executor raises its hand, the product reviewer is at work, and a performance lab added with <code>/flow-agent</code>.</sub></td>
+<td width="50%"><img src="assets/screenshots/site.jpg" alt="The simulation: four reviewers walking from the break room to the inspection room"><br><sub><b>The flow on the map.</b> Agents wait in the break room and walk to their desks when their stage starts; "▶ Simulate" plays a whole task with sample data.</sub></td>
 <td width="50%"><img src="assets/screenshots/site-light.jpg" alt="The same site in the light theme"><br><sub><b>Light theme.</b> The same site, in daylight.</sub></td>
 </tr>
 <tr>
-<td width="50%"><img src="assets/screenshots/now-pt.jpg" alt="The Now panel in Portuguese"><br><sub><b>Em português.</b> Every word the page shows switches with one button; agents write in the language set in <code>flow.json</code>.</sub></td>
+<td width="50%"><img src="assets/screenshots/now-pt.jpg" alt="The page in Portuguese"><br><sub><b>Em português.</b> Every word the page shows switches with one button; agents write in the language set in <code>flow.json</code>.</sub></td>
 <td width="50%"></td>
 </tr>
 </table>
@@ -438,7 +451,7 @@ Off by default. In `flow.json`:
 | `work.sh init <ID> "<title>"` | open a work directory (`/task` does this) |
 | `work.sh status` | every stage: gate, status or verdict, open clarifications, and what is next. Exits 1 on a failure |
 | `work.sh review-package` | write `review.diff`: commits and diff since the base, new files included |
-| `work.sh ui start` / `ui stop` | local dashboard of every worktree's tasks, in the background (first free port from 8787) |
+| `work.sh ui start` / `ui stop` | local dashboard of every worktree's tasks, in the background (first free port from 8787); a dashboard already running serves this project too, and start prints its link |
 | `work.sh ui [port]` | local dashboard in the foreground |
 | `work.sh ui answers [on\|off]` | let the dashboard answer this worktree's questions (default off) |
 | `work.sh ui turns [on\|off]` | let the dashboard send this worktree's main session its next message (default off) |

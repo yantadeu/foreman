@@ -13,7 +13,9 @@
 #        work.sh cleanup <ID>|--all-done [--state] [--worktree] [--memory]
 #                                      prints what the cleanup of done tasks deletes (the dashboard's
 #                                      plan); in a terminal, deletes it after "yes"
-#        work.sh ui start | stop       dashboard in the background (first free port from 8787), or stop it
+#        work.sh ui start | stop       dashboard in the background (first free port from 8787), or stop it;
+#                                      a dashboard already running serves this project too: start
+#                                      registers it there and prints its link instead
 #        work.sh ui [port]             dashboard in the foreground (default 8787)
 #        work.sh ui turns [on|off]     lets the dashboard send this worktree's main session its next
 #                                      message when it finishes a turn (held while the page is open)
@@ -126,6 +128,16 @@ EOF
       start)
         # Background server, so neither the terminal nor the agent's shell stays blocked.
         if [ -f "$pidf" ] && kill -0 "$(cat "$pidf")" 2>/dev/null; then cat "$work/ui.url"; exit 0; fi
+        # One dashboard serves every project: a running one (it answers /api/projects) gets this
+        # project in its registry, and no second server starts.
+        python3 "$(dirname "$0")/dashboard.py" register "$root" >/dev/null 2>&1 || true
+        for p in $(seq 8787 8799); do
+          if curl -fs -m 1 -o /dev/null "http://127.0.0.1:$p/api/projects" 2>/dev/null; then
+            name=$(basename "$root")
+            echo "http://127.0.0.1:$p/?project=$(python3 -c 'import sys,urllib.parse;print(urllib.parse.quote(sys.argv[1]))' "$name")"
+            exit 0
+          fi
+        done
         # First free port from 8787. One dashboard already lists every worktree's tasks; a
         # second one started from another worktree is the same page on another port.
         port=$(python3 -c 'import socket,sys

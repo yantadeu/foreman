@@ -17,8 +17,7 @@
   * { box-sizing:border-box }
   body { margin:0; color:var(--fg); font:13px/1.5 var(--mono); background:radial-gradient(1200px 600px at 70% -200px, rgba(76,201,240,.07), transparent 60%), var(--bg) }
   :root[data-theme="light"] body { background:var(--bg) }
-  .app { display:grid; grid-template-columns:var(--side-w, 290px) minmax(0,1fr); min-height:100vh }
-  .app.rail { grid-template-columns:44px minmax(0,1fr) }
+  .app { min-height:100vh }
   aside { border-right:1px solid var(--line); background:linear-gradient(180deg, var(--card), var(--bg)); padding:12px 0; max-height:100vh; position:sticky; top:0; overflow:auto; display:flex; flex-direction:column }
   .side-top { display:flex; align-items:center; gap:4px; padding:0 8px 8px 14px } .side-top .side-h { padding:0; flex:1 }
   button.icon { padding:0 6px; border-color:transparent; background:none; color:var(--mute) } button.icon:hover { color:var(--fg) } #side-gear.on { color:var(--ok) }
@@ -33,8 +32,8 @@
   .task .ttl { color:var(--mute); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0 } .task .part { font-size:10px; color:var(--mute); white-space:nowrap }
   .done-h { padding:8px 14px 2px; font-size:12px; color:var(--mute); cursor:pointer }
   #tasks { flex:1 }
-  main { padding:16px 20px 40px; min-width:0 }
-  @media (max-width: 700px) { .app, .app.rail { grid-template-columns:1fr } aside { position:static; max-height:none; border-right:0; border-bottom:1px solid var(--line) } }
+  main { padding:4px 20px 24px; min-width:0 }
+  @media (max-width: 860px) { .app { grid-template-columns:1fr } aside { position:static; max-height:none; border-right:0; border-bottom:1px solid var(--line) } }
   button { font:inherit; background:var(--card); color:var(--fg); border:1px solid var(--line); border-radius:3px; padding:3px 12px; cursor:pointer }
   button:hover { border-color:var(--accent) } button:disabled { opacity:.5; cursor:default }
   button.primary { border-color:var(--accent); color:var(--accent) } button.danger { border-color:var(--bad); color:var(--bad) }
@@ -62,7 +61,7 @@
   .task:hover, .task.sel { background:var(--sel) } .task.sel { border-left-color:var(--accent) }
   .task .t { display:flex; gap:6px; align-items:center; min-width:0 } .task .id { font-weight:600; white-space:nowrap }
   .task .sub { color:var(--mute); font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-  .credit { display:block; padding:14px; color:var(--mute); font-size:11px; text-decoration:none; border-top:1px solid var(--line) } .credit:hover { color:var(--accent) }
+  .credit { display:block; padding:14px 0 0; color:var(--mute); font-size:11px; text-decoration:none } .credit:hover { color:var(--accent) }
   .badge { display:inline-block; min-width:18px; text-align:center; font-size:11px; font-weight:700; color:#111; background:var(--warn); border-radius:9px; padding:0 6px; margin-left:6px }
   /* badges */
   .st { font-size:11px; border:1px solid var(--line); border-radius:3px; padding:0 7px; margin-left:auto; white-space:nowrap }
@@ -165,9 +164,11 @@
   .plan { overflow-x:auto } .floor { position:relative; min-width:760px; max-width:1040px; margin:0 auto; aspect-ratio:1000/600; border-radius:8px; overflow:hidden; border:1px solid var(--line) }
   .floor-svg { position:absolute; inset:0; width:100%; height:100% }
   :root { --corr1:#24211c; --corr2:#2e2a23; --wall:#55504a; --fr1:#123056; --fr2:#2a5590; --fw1:#34373c; --fw2:#3f4247; --fv1:#26332d; --fv2:#31423a; --fd1:#3d3022; --fd2:#4a3a29;
-          --desk:#6b5236; --sheet:#dce9f8; --ink:#2a5590; --tool:#e8833a; --brick:#a4553a; --cone:#f07c22; --hazard:#f2b705; --hat-boss:#f4f3ee }
+          --desk:#6b5236; --sheet:#dce9f8; --ink:#2a5590; --tool:#e8833a; --brick:#a4553a; --cone:#f07c22; --hazard:#f2b705; --hat-boss:#f4f3ee;
+          --fl1:#3a2438; --fl2:#47304a; --sofa:#2f6f73; --sofa2:#3c878c; --rug:#6b3b52; --leaf:#3fa463; --pot:#b5653c }
   :root[data-theme="light"] { --corr1:#e2d6bf; --corr2:#d6c8ad; --wall:#8a8174; --fr1:#2f5f9e; --fr2:#5b86c4; --fw1:#c9cbce; --fw2:#bcbec2; --fv1:#cfe1d5; --fv2:#bad3c2; --fd1:#e8cd9b; --fd2:#d9b97f;
-          --desk:#9b7447; --sheet:#ffffff; --ink:#2f5f9e; --tool:#e8833a; --brick:#b9603f; --cone:#f07c22; --hazard:#f2b705; --hat-boss:#ffffff }
+          --desk:#9b7447; --sheet:#ffffff; --ink:#2f5f9e; --tool:#e8833a; --brick:#b9603f; --cone:#f07c22; --hazard:#f2b705; --hat-boss:#ffffff;
+          --fl1:#f0dfe6; --fl2:#e4cbd6; --sofa:#4a9ca1; --sofa2:#6bb7bb; --rug:#d99ab4; --leaf:#3fa463; --pot:#c4744a }
   /* a room's name is a site sign: yellow board, dark letters */
   .rlabel { position:absolute; font-size:11px; font-weight:700; letter-spacing:.02em; color:#1d1a14; background:var(--hazard); border:2px solid #1d1a14; border-radius:3px; padding:0 9px; box-shadow:0 2px 0 rgba(0,0,0,.35) }
   .rlabel.here { outline:2px solid var(--accent); outline-offset:2px }
@@ -189,6 +190,98 @@
   .switch i::after { content:""; position:absolute; top:2px; left:2px; width:10px; height:10px; border-radius:50%; background:var(--mute); transition:left .2s }
   .switch.on i { background:rgba(61,220,151,.35) } .switch.on i::after { left:14px; background:var(--ok) } .switch.on b { color:var(--ok) }
 
+  /* the site, Gather style: the map, the crew beside it, the session's chat under it */
+  .site { display:grid; grid-template-columns:minmax(0,1fr) 290px; gap:12px; align-items:start }
+  @media (max-width: 1180px) { .site { grid-template-columns:1fr } }
+  .stage { min-width:0; overflow-x:auto } .stage .floor { margin:0 }
+  .sitebar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 8px; font-size:12px } .sitebar button { white-space:nowrap }
+  .crew { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px; position:sticky; top:10px; max-height:calc(100vh - 20px); overflow:auto }
+  .crew h3 { margin:4px 4px 6px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent) }
+  .crew .pop { margin:0 0 10px }
+  .crew-row { display:flex; align-items:center; gap:8px; width:100%; text-align:left; background:none; border:1px solid transparent; border-radius:6px; padding:4px 6px; color:var(--fg); font:inherit; cursor:pointer }
+  .crew-row:hover { background:var(--sel) } .crew-row.open { border-color:var(--accent); background:var(--sel) }
+  .crew-row .cn { display:grid; min-width:0; flex:1; line-height:1.35 } .crew-row .meta { font-size:11px }
+  .crew-row .cl { font-size:11px; color:var(--run); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  .crew-row.away { opacity:.7 } .crew-row.hand { border-color:var(--warn); box-shadow:var(--glow) }
+  .seat { cursor:pointer; z-index:1 } .seat.open, .seat.walking { z-index:3 } .seat .face { display:contents }
+  .bubble.errand { background:#fff8c5; color:#3b3200 } .bubble.zz { background:var(--card2); color:var(--mute); border:1px solid var(--line); box-shadow:none; font-weight:500 }
+  #body.notask > :not(#plan) { display:none } .seat:has(.errand) .face .bubble.say { display:none }
+  .sitebar .btns { display:flex; gap:6px } .sitebar .demo-on { color:var(--warn) }
+  .seat.walking svg { animation:walk .36s ease-in-out infinite } .seat.away .tag { opacity:.8 }
+  @keyframes walk { 0%,100% { transform:translateY(0) rotate(-5deg) } 50% { transform:translateY(-4px) rotate(5deg) } }
+  .bubble.say { top:auto; bottom:calc(100% + 2px); right:auto; left:50%; transform:translateX(-50%); max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; font-size:10.5px; padding:2px 8px; border-radius:8px 8px 8px 2px; z-index:2 }
+  .rglow { position:absolute; pointer-events:none; border-radius:2px }
+  .rglow.on { box-shadow:inset 0 0 0 3px rgba(76,201,240,.55), inset 0 0 46px rgba(76,201,240,.16); animation:glow 2.4s ease-in-out infinite }
+  @keyframes glow { 50% { box-shadow:inset 0 0 0 3px rgba(76,201,240,.25), inset 0 0 30px rgba(76,201,240,.08) } }
+  .rlabel.lounge { background:#f6c6dc }
+  #chatbar .alert { margin:10px 0 0 } #chatbar .alert .head { display:flex; align-items:center; gap:8px }
+  .chat.off { margin-top:10px; border:1px dashed var(--line); border-radius:6px; padding:8px 12px; display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+  .plan:fullscreen { background:var(--bg); padding:16px; overflow:auto } .plan:fullscreen .site { grid-template-columns:minmax(0,1fr) 310px }
+  .plan:fullscreen .floor { max-width:min(100%, calc((100vh - 150px) * var(--ar, 1.4))) }
+  @media (prefers-reduced-motion: reduce) { .floor .token { transition:none } .seat.walking svg, .rglow.on { animation:none } }
+
+  /* the world: a canvas of tiles, HTML over it for names, bubbles and signs */
+  .worldbox { position:relative; height:clamp(420px, calc(100vh - 300px), 900px); border-radius:12px; overflow:hidden; border:1px solid var(--line); background:#6fa64f; box-shadow:0 10px 30px rgba(0,0,0,.25) }
+  #world { position:absolute; inset:0; width:100%; height:100%; display:block; outline:none; cursor:pointer; image-rendering:pixelated }
+  #world:focus-visible { box-shadow:inset 0 0 0 3px var(--accent) }
+  #world-ov { position:absolute; inset:0; pointer-events:none; overflow:hidden; font-family:var(--mono); z-index:1 }
+  #world-ov .who { position:absolute; left:0; top:0; pointer-events:auto; background:none; border:0; padding:0; width:0; height:0; cursor:pointer }
+  #world-ov .face { position:absolute; left:0; bottom:0; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:3px }
+  #world-ov .bubble { position:static; transform:none; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; animation:none }
+  #world-ov .bubble.hand { animation:wave 1.1s ease-in-out infinite, ring 1.6s ease-out infinite }
+  #world-ov .who > .errand { position:absolute; left:0; bottom:44px; transform:translateX(-50%) }
+  #world-ov .tag { font-size:10.5px; padding:1px 8px; background:rgba(16,20,30,.82) }
+  #world-ov .who.open .tag { outline:2px solid var(--accent) } #world-ov .who.near .tag { background:var(--accent); color:#111 }
+  #world-ov .who.near .tag .dot { background:#111 }
+  #world-ov .tag.me { background:#e76f51; color:#fff; font-weight:700 }
+  #world-ov .rlabel, #world-ov .rglow, #world-ov .token { position:absolute; left:0; top:0 }
+  #world-ov .rglow { border-radius:4px } #world-ov .token { transition:none }
+  #minimap { position:absolute; z-index:2; right:10px; top:10px; border:2px solid rgba(255,255,255,.85); border-radius:8px; background:#000; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.35) }
+  .gbar { position:absolute; z-index:2; left:50%; bottom:12px; transform:translateX(-50%); display:flex; gap:12px; align-items:center; justify-content:center; flex-wrap:nowrap; white-space:nowrap; background:rgba(18,22,34,.94); color:#fff; border-radius:14px; padding:6px 10px; box-shadow:0 8px 24px rgba(0,0,0,.4); max-width:calc(100% - 24px) }
+  .gbar button { background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.18); border-radius:10px; padding:4px 10px }
+  .gbar button:hover { background:rgba(255,255,255,.16) } .gbtns { display:flex; gap:6px; flex-wrap:nowrap }
+  .me-chip { display:flex; align-items:center; gap:8px } .me-chip .meta { color:#c9d1dd; font-size:11px; max-width:210px; overflow:hidden; text-overflow:ellipsis }
+  .avatar { image-rendering:pixelated; vertical-align:middle; flex:none }
+  .world-hint { margin:8px 2px 0; font-size:12px }
+  #chatbar.near .alert, #chatbar.near .chat { box-shadow:0 0 0 2px var(--accent) }
+  .plan:fullscreen .worldbox { height:calc(100vh - 110px) }
+  @media (max-width: 700px) { #minimap { width:110px; height:auto } .gbar { gap:6px } .me-chip .meta { display:none } }
+
+  /* the page: a top bar, the world in the middle, the task or the crew beside it */
+  .topbar { position:sticky; top:0; z-index:30; background:var(--bg); padding:10px 20px; margin:0 }
+  .topbar .controls { flex-wrap:nowrap; white-space:nowrap } .topbar .bname span { white-space:nowrap }
+  @media (max-width: 1640px) { #notify-state, .topbar .bname span { display:none } }
+  .taskmenu { position:relative; margin-left:8px } .taskmenu > summary { list-style:none; display:flex; align-items:center; gap:8px; border:1px solid var(--line); border-radius:8px; padding:5px 12px; color:var(--fg); font-size:12px; max-width:420px; background:var(--card) }
+  .taskmenu > summary::-webkit-details-marker { display:none } .taskmenu > summary::after { content:"▾"; color:var(--mute) } .taskmenu > summary:hover { border-color:var(--accent) }
+  .taskmenu .pick { overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+  .taskmenu .menu { position:absolute; top:calc(100% + 6px); left:0; width:360px; max-height:65vh; overflow:auto; background:var(--card); border:1px solid var(--line); border-radius:10px; box-shadow:0 14px 34px rgba(0,0,0,.4); padding:10px 0; z-index:40 }
+  .projmenu > summary { font-weight:700 } .projmenu .live-dot { width:8px; height:8px; border-radius:50%; background:var(--line); display:inline-block; flex:none } .projmenu .live-dot.on { background:var(--ok) }
+  .projmenu + .taskmenu { margin-left:6px }
+  .desk { display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:14px; align-items:start; margin-top:10px }
+  .side .waiting { margin:0 0 10px } .side .credit { padding-top:16px }
+  /* The office fills the window: no page scroll, the map takes every pixel left, the chat sits
+     under it and the side panel scrolls on its own. A narrow window scrolls as before. */
+  @media (min-width: 1101px) {
+    html, body { height:100% } html { background:var(--bg) } body { overflow:hidden }
+    .app { height:100vh; display:flex; flex-direction:column }
+    main { flex:1; min-height:0; padding:10px 16px 12px; display:flex; flex-direction:column }
+    .desk { flex:1; min-height:0; margin-top:0; align-items:stretch; grid-template-rows:minmax(0,1fr) }
+    .center, #plan, .stage { display:flex; flex-direction:column; min-height:0 } .center { height:100% } #plan, .stage { flex:1 }
+    .worldbox { flex:1; height:auto; min-height:0 }
+    .world-hint { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:6px 2px 0 }
+    .dock { margin-top:8px; padding:8px 12px } .dock .said { max-height:34vh; resize:vertical } .dock-row { margin-top:6px } .dock-row textarea { min-height:40px }
+    .side { position:static; height:100%; max-height:none }
+  }
+  @media (max-width: 1100px) { .desk { grid-template-columns:1fr } }
+  .side { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 14px 14px; position:sticky; top:70px; max-height:calc(100vh - 82px); overflow:auto }
+  .side .tabs { margin:0 0 6px } .side h1 { font-size:15px; margin:8px 0 2px } .side .now { grid-template-columns:1fr } .side .now .verb { font-size:14px; padding:6px }
+  .crew-h { margin:10px 4px 6px; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent) }
+  .dock { margin-top:10px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 12px; transition:box-shadow .3s }
+  .dock.turn { border-color:var(--accent); box-shadow:var(--glow) } #chatbar.near { box-shadow:0 0 0 2px var(--accent) }
+  .dock-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap } .dock-head .meta { margin-left:auto }
+  .dock .said { margin:6px 0 0; padding:6px 10px; background:var(--card2); border-radius:8px; white-space:pre-wrap; max-height:140px; overflow:auto; font-size:12px }
+  .dock-row { display:flex; gap:8px; align-items:flex-end; margin-top:8px } .dock-row textarea { flex:1; resize:vertical; min-height:46px; border-radius:8px }
+  .dock-row button { white-space:nowrap; padding:6px 14px; border-radius:8px }
   .turn-msg { white-space:pre-wrap; overflow-wrap:anywhere; max-height:260px; overflow:auto; margin-top:6px; padding:6px 8px; background:var(--bg); border:1px solid var(--line); border-radius:3px; font-size:12px }
   .dismiss { float:right; border:0; background:none; color:var(--mute); font-size:16px; line-height:1; padding:0 4px } .dismiss:hover { color:var(--fg) }
   .dismissed { margin-top:8px } .dismissed > summary { font-size:12px } .dismissed .alert { opacity:.7; margin-top:6px }
@@ -196,15 +289,8 @@
 </head>
 <body>
 <div class="app">
-<aside id="side"><div class="side-top"><span class="side-h" data-i18n="side.tasks">Tasks</span><button type="button" id="side-gear" class="icon" aria-expanded="false" aria-controls="side-pop"></button><button type="button" id="side-collapse" class="icon"></button></div>
-<div id="side-pop" class="popover" hidden></div>
-<input type="search" id="side-filter" autocomplete="off">
-<div id="tasks"><div class="meta" style="padding:0 14px" data-i18n="loading">Loading…</div></div>
-<details id="merge-box" hidden><summary id="merge-sum"></summary><div id="merge"></div></details>
-<div id="side-grip" role="separator" aria-orientation="vertical" tabindex="0"></div>
-<a class="credit" href="https://github.com/yantadeu/foreman" target="_blank" rel="noopener" data-i18n="brand.credit">Foreman by Yan Tadeu · Apache-2.0</a></aside>
-<main>
-<header class="brand"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="23" width="44" height="34" rx="10" fill="#121826" stroke="#f5a524" stroke-width="3"/><path d="M7 27h50a2.5 2.5 0 0 0 0-5h-3.5C53.5 11.5 44 4 32 4S10.5 11.5 10.5 22H7a2.5 2.5 0 0 0 0 5z" fill="#f5a524"/><rect x="28.5" y="4.5" width="7" height="16" rx="2.5" fill="#c97f00"/><rect x="16" y="32" width="32" height="15" rx="5" fill="#070b14"/><path class="pulse" d="M19 40h6l3-5.5 4.5 11 3-5.5h9.5" fill="none" stroke="#4cc9f0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="24" y="50" width="16" height="3" rx="1.5" fill="#f5a524" opacity=".55"/></svg><div class="bname"><b>FOREMAN</b><span data-i18n="brand.tag">mission control for coding agents</span></div>
+<header class="brand topbar"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="23" width="44" height="34" rx="10" fill="#121826" stroke="#f5a524" stroke-width="3"/><path d="M7 27h50a2.5 2.5 0 0 0 0-5h-3.5C53.5 11.5 44 4 32 4S10.5 11.5 10.5 22H7a2.5 2.5 0 0 0 0 5z" fill="#f5a524"/><rect x="28.5" y="4.5" width="7" height="16" rx="2.5" fill="#c97f00"/><rect x="16" y="32" width="32" height="15" rx="5" fill="#070b14"/><path class="pulse" d="M19 40h6l3-5.5 4.5 11 3-5.5h9.5" fill="none" stroke="#4cc9f0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="24" y="50" width="16" height="3" rx="1.5" fill="#f5a524" opacity=".55"/></svg><div class="bname"><b>FOREMAN</b><span data-i18n="brand.tag">mission control for coding agents</span></div>
+<details class="taskmenu projmenu" id="projmenu" hidden><summary id="proj-pick"></summary><div class="menu"><div class="side-h" data-i18n="proj.title">Projects</div><div id="projects"></div></div></details><details class="taskmenu" id="taskmenu"><summary id="task-pick"></summary><div class="menu"><div class="side-h" data-i18n="side.tasks">Tasks</div><div id="tasks"><div class="meta" style="padding:0 14px" data-i18n="loading">Loading…</div></div></div></details>
 <div class="controls">
   <span class="live" id="live"></span>
   <button id="menu-btn" type="button" class="icon" aria-expanded="false" aria-controls="menu"></button>
@@ -216,28 +302,36 @@
     <span id="notify-state" class="meta"></span>
   </div>
 </div></header>
+<main>
+<div class="desk">
+<div class="center"><div id="plan" class="plan"></div></div>
+<section class="side">
 <section class="waiting" id="waiting" hidden>
-<h2><span data-i18n="needs.title">Needs you</span> <span class="ncount" id="needs-count" aria-live="polite"></span></h2>
 <div id="needs">
-<div class="ngroup" data-group="answer" hidden><div class="ngroup-h"><span data-i18n="needs.g.answer">Answer</span> <span class="n"></span></div><div class="nlist"></div></div>
-<div class="ngroup" data-group="approve" hidden><div class="ngroup-h"><span data-i18n="needs.g.approve">Approve</span> <span class="n"></span></div><div class="nlist"></div></div>
-<div class="ngroup" data-group="decide" hidden><div class="ngroup-h"><span data-i18n="needs.g.decide">Decide</span> <span class="n"></span></div><div class="nlist"></div></div>
-<div class="ngroup" data-group="ship" hidden><div class="ngroup-h"><span data-i18n="needs.g.ship">Ship</span> <span class="n"></span></div><div class="nlist"></div></div>
-<div class="ngroup" data-group="idle" hidden><div class="ngroup-h"><span data-i18n="needs.g.idle">Idle sessions</span> <span class="n"></span></div><div class="nlist"></div></div>
-<details class="ngroup" data-group="progress" hidden><summary class="ngroup-h"><span data-i18n="needs.g.progress">Progress</span> <span class="n"></span></summary><div class="nlist"></div></details>
+<h2 id="waiting-title" data-i18n="waiting.title">Waiting on you <span id="needs-count" aria-live="polite"></span></h2>
+<div class="ngroup" data-group="answer"><h3 class="ngroup-h"></h3><div class="cards nlist" id="attn"></div></div>
+<div class="ngroup" data-group="approve"><h3 class="ngroup-h"></h3><div class="cards nlist" id="needs-approve"></div></div>
+<div class="ngroup" data-group="decide"><h3 class="ngroup-h"></h3><div class="cards nlist" id="needs-decide"></div></div>
+<div class="ngroup" data-group="ship"><h3 class="ngroup-h"></h3><div class="cards nlist" id="todo" style="margin:0 0 8px"></div></div>
+<div class="ngroup" data-group="idle"><h3 class="ngroup-h"></h3><div class="cards nlist" id="needs-idle"></div></div>
+<details class="ngroup" data-group="progress" hidden><summary class="ngroup-h"></summary><div class="cards nlist" id="needs-progress"></div></details>
 </div>
-<div id="dismissed-box"></div>
 </section>
-<div class="meta" id="legend" style="margin-top:10px"></div>
+<div class="meta" id="legend" style="margin-top:8px"></div>
+<div class="tabs"><button type="button" data-tab="tree" data-i18n="tab.tree">Steps</button><button type="button" data-tab="office" data-i18n="tab.office">Office</button></div>
+<div id="pane-task">
 <h1 id="title">Foreman</h1>
 <div class="where" id="where"></div>
 <div id="now"></div>
 <div id="body" hidden>
-<div class="tabs"><button type="button" data-tab="tree" data-i18n="tab.tree">Steps</button><button type="button" data-tab="office" data-i18n="tab.office">Office</button></div>
 <div id="tree"></div>
-<div id="plan" class="plan" hidden></div>
 <h2 data-i18n="h.rulings">Decisions taken without you</h2><div class="rulings" id="rulings"></div>
 <details id="events"><summary id="events-sum"></summary><table id="feed"></table></details>
+</div>
+</div>
+<div id="pane-crew" hidden><div id="pop"></div><h3 class="crew-h" data-i18n="h.crew">Crew</h3><div id="crew-list"></div></div>
+<a class="credit" href="https://github.com/yantadeu/foreman" target="_blank" rel="noopener" data-i18n="brand.credit">Foreman by Yan Tadeu · Apache-2.0</a>
+</section>
 </div>
 </main>
 </div>
@@ -559,6 +653,21 @@ const I18N = /* i18n:begin */{
   "room.decision": "Site office",
   "room.decision.m": "You sign off the findings and close; the retrospective keeps the learnings.",
   "office.hand": "raised hand: it needs you, click the robot",
+  "room.lounge": "Break room",
+  "site.full": "Full screen",
+  "site.exit": "Exit full screen",
+  "site.hint": "Click the map, then walk with WASD or the arrows, or click where to go. Come close to someone and their card opens beside the map.",
+  "chat.title": "Your session waits for your next message",
+  "chat.working": "The session is working. When it finishes its turn, you reply to it right here.",
+  "chat.off": "Talking to the session from this page is off for this worktree.",
+  "pop.close": "Close",
+  "pop.chat": "It waits for your next message: write it in the chat under the map.",
+  "site.demo": "▶ Simulate",
+  "site.demo.stop": "■ Stop",
+  "site.demo.on": "Simulation: sample data, nothing here is real.",
+  "idle.notask": "💤 no task",
+  "idle.waiting": "💤",
+  "site.notask": "No task yet: the crew is idle. Start one with /task in a Claude Code session, or press ▶ to see how a task runs.",
   "pop.file": "writes {file}",
   "pop.blocked": "It stopped without finishing its file and asks for context; the session usually sends it back.",
   "pop.idle": "Not started for this task yet.",
@@ -579,9 +688,36 @@ const I18N = /* i18n:begin */{
   "tree.here": "YOU ARE HERE",
   "tree.waiting": "not started",
   "office.you": "You",
+  "office.foreman": "Foreman (main session)",
+  "chat.placeholder": "Talk to the foreman: a question, or a task (/task ...). Ctrl+Enter sends.",
+  "chat.state.turn": "waits for your message",
+  "chat.state.working": "working",
+  "chat.state.none": "no session open in {wt}",
+  "chat.send": "Send",
+  "chat.queue": "Send when it finishes",
+  "chat.cmd": "Make the command",
+  "chat.queued": "Queued: it goes as soon as the session finishes its turn.",
+  "chat.unqueue": "Cancel",
+  "chat.state.idle": "waits in its terminal",
+  "chat.state.fresh": "new session: waits in its terminal",
+  "chat.fresh": "This session was just opened and has not taken a message yet: Claude Code only reads its first message from the terminal. Paste this there; from its first answer on, the chat reaches it:",
+  "chat.term": "Take it to the terminal",
+  "chat.idle": "The session is stopped at its prompt and the page's hold on it is over, so a message from here cannot reach it. Paste this in its terminal; from its next stop on, the page holds the turn again:",
+  "chat.sent": "Sent to the session.",
+  "chat.none": "No Claude session is open here, and the page cannot open one. Run this in a terminal:",
+  "pick.none": "No task",
+  "proj.title": "Projects",
+  "proj.needs": "{name}: something needs you",
+  "proj.live": "a Claude session is open",
+  "world.near": "Near {name}",
+  "world.alone": "Nobody near you",
+  "world.goto": "→ Foreman",
+  "world.zoomin": "Zoom in",
+  "world.zoomout": "Zoom out",
+  "world.map": "Map: click to walk there",
   "fpick.sent.now": "Decision sent. The session in {wt} takes it right away if it is working or waiting for it; if it has stopped, the command below delivers it.",
-  "tab.tree": "Steps",
-  "tab.office": "Site",
+  "tab.tree": "Task",
+  "tab.office": "Crew",
   "waiting.elsewhere": "Also waiting on you, in other tasks",
   "lane.Light": "light",
   "lane.Full": "full",
@@ -974,6 +1110,21 @@ const I18N = /* i18n:begin */{
   "room.decision": "Barracão da obra",
   "room.decision.m": "Você decide os achados e fecha; a retrospectiva guarda os aprendizados.",
   "office.hand": "mão levantada: precisa de você, clique no robô",
+  "room.lounge": "Copa",
+  "site.full": "Tela cheia",
+  "site.exit": "Sair da tela cheia",
+  "site.hint": "Clique no mapa e ande com WASD ou as setas, ou clique onde quer ir. Chegue perto de alguém e o cartão dele abre ao lado do mapa.",
+  "chat.title": "Sua sessão espera a sua próxima mensagem",
+  "chat.working": "A sessão está trabalhando. Quando ela terminar a vez, você responde aqui mesmo.",
+  "chat.off": "Conversar com a sessão por esta página está desligado nesta worktree.",
+  "pop.close": "Fechar",
+  "pop.chat": "Espera a sua próxima mensagem: escreva no chat embaixo do mapa.",
+  "site.demo": "▶ Simular",
+  "site.demo.stop": "■ Parar",
+  "site.demo.on": "Simulação: dados de exemplo, nada aqui é real.",
+  "idle.notask": "💤 sem tarefa",
+  "idle.waiting": "💤",
+  "site.notask": "Nenhuma tarefa ainda: a equipe está parada. Comece uma com /task numa sessão do Claude Code, ou aperte ▶ para ver como uma tarefa anda.",
   "pop.file": "escreve {file}",
   "pop.blocked": "Parou sem terminar o arquivo e pede contexto; a sessão costuma mandá-lo de volta.",
   "pop.idle": "Ainda não começou nesta tarefa.",
@@ -994,9 +1145,36 @@ const I18N = /* i18n:begin */{
   "tree.here": "VOCÊ ESTÁ AQUI",
   "tree.waiting": "não começou",
   "office.you": "Você",
+  "office.foreman": "Foreman (sessão principal)",
+  "chat.placeholder": "Fale com o foreman: uma pergunta ou uma tarefa (/task ...). Ctrl+Enter envia.",
+  "chat.state.turn": "espera a sua mensagem",
+  "chat.state.working": "trabalhando",
+  "chat.state.none": "nenhuma sessão aberta em {wt}",
+  "chat.send": "Enviar",
+  "chat.queue": "Enviar quando terminar",
+  "chat.cmd": "Gerar o comando",
+  "chat.queued": "Na fila: vai assim que a sessão terminar a vez dela.",
+  "chat.unqueue": "Cancelar",
+  "chat.state.idle": "espera no terminal",
+  "chat.state.fresh": "sessão nova: espera no terminal",
+  "chat.fresh": "Esta sessão acabou de abrir e ainda não recebeu nenhuma mensagem: o Claude Code só lê a primeira pelo terminal. Cole isto lá; a partir da primeira resposta, o chat alcança a sessão:",
+  "chat.term": "Levar ao terminal",
+  "chat.idle": "A sessão está parada no prompt e a página não a segura mais, então uma mensagem daqui não chega nela. Cole isto no terminal dela; a partir da próxima parada a página volta a segurar a vez:",
+  "chat.sent": "Enviado para a sessão.",
+  "chat.none": "Nenhuma sessão do Claude está aberta aqui, e a página não consegue abrir uma. Rode isto num terminal:",
+  "pick.none": "Nenhuma tarefa",
+  "proj.title": "Projetos",
+  "proj.needs": "{name}: algo precisa de você",
+  "proj.live": "uma sessão do Claude está aberta",
+  "world.near": "Perto de {name}",
+  "world.alone": "Ninguém perto de você",
+  "world.goto": "→ Foreman",
+  "world.zoomin": "Aproximar",
+  "world.zoomout": "Afastar",
+  "world.map": "Mapa: clique para ir até lá",
   "fpick.sent.now": "Decisão enviada. A sessão em {wt} recebe na hora se estiver trabalhando ou esperando por ela; se já parou, o comando abaixo entrega.",
-  "tab.tree": "Etapas",
-  "tab.office": "Obra",
+  "tab.tree": "Tarefa",
+  "tab.office": "Equipe",
   "waiting.elsewhere": "Também esperando por você, em outras tarefas",
   "lane.Light": "leve",
   "lane.Full": "completa",
@@ -1136,13 +1314,17 @@ async function errorText(r) {
   return `<div class="bad">${msg}</div><details><summary>${t("err.raw")}</summary><div class="meta">${esc(raw.slice(0, 300))}</div></details>`;
 }
 // null means "not found"; a server or network error throws, so it never reads as "no task".
-const getJSON = async (p) => { const r = await fetch(p); if (r.status === 404) return null; if (!r.ok) throw new Error(p + ": HTTP " + r.status + " " + (await r.text()).slice(0, 200)); return r.json() };
+// One dashboard serves every project of the machine: each request names the project on screen
+// by its index in /api/projects (?p=), never by a path. An older server has no projects: no ?p.
+let proj = null, projects = [], projSeen = {};
+const scoped = (path) => proj == null || path.startsWith("api/projects") ? path : path + (path.includes("?") ? "&" : "?") + "p=" + proj;
+const getJSON = async (p) => { const r = await fetch(scoped(p)); if (r.status === 404) return null; if (!r.ok) throw new Error(p + ": HTTP " + r.status + " " + (await r.text()).slice(0, 200)); return r.json() };
 // Per-server secret the dashboard substitutes when it serves this page; required by every POST.
 const TOKEN = "__KIT_TOKEN__";
 // Split so the server's substitution leaves this one alone: TOKEN still equal to it means the
 // page was not served by a Foreman dashboard.
 const PLACEHOLDER = "__KIT_" + "TOKEN__";
-const post = (path, body) => fetch(path, { method: "POST", headers: { "Content-Type": "application/json", "X-Kit-Token": TOKEN }, body: JSON.stringify(body) });
+const post = (path, body) => fetch(scoped(path), { method: "POST", headers: { "Content-Type": "application/json", "X-Kit-Token": TOKEN }, body: JSON.stringify(body) });
 
 // Robots: one per role, its color and emblem; eyes and antenna show the state.
 const ROLES = {
@@ -1196,62 +1378,7 @@ function stepRoom(st) {
   if (st.key === "decision" || st.key === "closed") return roomOf("main");
   return roomOf(st.role);
 }
-const FLOORS = ["fr", "fw", "fv", "fd"];
-const ROOM_FLOOR = { refine: "fr", workshop: "fw", review: "fv", decision: "fd" };
-const DEFS = `<defs>
-<pattern id="yard" width="22" height="22" patternUnits="userSpaceOnUse"><rect width="22" height="22" style="fill:var(--corr1)"/><circle cx="4" cy="5" r="1.4" style="fill:var(--corr2)"/><circle cx="15" cy="9" r="1.1" style="fill:var(--corr2)"/><circle cx="9" cy="17" r="1.6" style="fill:var(--corr2)"/><circle cx="19" cy="19" r="1" style="fill:var(--corr2)"/></pattern>
-<pattern id="hazard" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="14" height="14" style="fill:var(--hazard)"/><rect width="7" height="14" fill="#1d1a14"/></pattern>
-<pattern id="fr" width="48" height="48" patternUnits="userSpaceOnUse"><rect width="48" height="48" style="fill:var(--fr1)"/><path d="M12 0v48M24 0v48M36 0v48M0 12h48M0 24h48M0 36h48" style="stroke:var(--fr2)" stroke-width=".6" opacity=".55"/><path d="M0 0h48M0 0v48" style="stroke:var(--fr2)" stroke-width="1.4"/></pattern>
-<pattern id="fw" width="60" height="60" patternUnits="userSpaceOnUse"><rect width="60" height="60" style="fill:var(--fw1)"/><circle cx="12" cy="14" r="1.2" style="fill:var(--fw2)"/><circle cx="40" cy="8" r="1" style="fill:var(--fw2)"/><circle cx="30" cy="38" r="1.4" style="fill:var(--fw2)"/><circle cx="50" cy="48" r="1" style="fill:var(--fw2)"/><path d="M0 0h60M0 0v60" style="stroke:var(--fw2)" stroke-width="2"/></pattern>
-<pattern id="fv" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" style="fill:var(--fv1)"/><path d="M0 0h30M0 0v30" style="stroke:var(--fv2)" stroke-width="2"/></pattern>
-<pattern id="fd" width="80" height="20" patternUnits="userSpaceOnUse"><rect width="80" height="20" style="fill:var(--fd1)"/><path d="M0 0h80M50 0v20" style="stroke:var(--fd2)" stroke-width="1.5"/><circle cx="6" cy="10" r=".9" style="fill:var(--fd2)"/><circle cx="74" cy="10" r=".9" style="fill:var(--fd2)"/></pattern></defs>`;
-const cone = (x, y) => `<path d="M${x - 8} ${y + 9}h16l-5.5-19h-5z" style="fill:var(--cone)"/><path d="M${x - 4.4} ${y - 2}h8.8" stroke="#fff" stroke-width="2.4"/><rect x="${x - 10}" y="${y + 8}" width="20" height="3" rx="1" style="fill:var(--cone)"/>`;
-function station(kind, cx, dy) {
-  if (kind === "fr") return `<rect x="${cx - 46}" y="${dy}" width="92" height="26" rx="2" style="fill:var(--desk)"/><rect x="${cx - 36}" y="${dy + 3}" width="58" height="20" style="fill:var(--sheet)"/><path d="M${cx - 31} ${dy + 9}h30M${cx - 31} ${dy + 14}h44M${cx - 31} ${dy + 19}h22M${cx + 4} ${dy + 6}v12" style="stroke:var(--ink)" stroke-width="1.2"/><path d="M${cx + 28} ${dy + 4}l12 16" stroke="#1d1a14" stroke-width="2"/>`;
-  if (kind === "fv") return `<rect x="${cx - 45}" y="${dy}" width="90" height="24" rx="3" style="fill:var(--desk)"/><rect x="${cx - 12}" y="${dy - 6}" width="24" height="30" rx="2" style="fill:var(--sheet)"/><rect x="${cx - 6}" y="${dy - 9}" width="12" height="5" rx="1" fill="#555"/><path d="M${cx - 8} ${dy + 4}l2 2 4-4M${cx - 8} ${dy + 12}l2 2 4-4" stroke="#2f9e5b" stroke-width="1.6" fill="none"/><path d="M${cx} ${dy + 4}h7M${cx} ${dy + 12}h7M${cx - 8} ${dy + 19}h15" style="stroke:var(--ink)" stroke-width="1.2"/>`;
-  return `<rect x="${cx - 46}" y="${dy + 2}" width="92" height="20" rx="2" style="fill:var(--desk)"/><rect x="${cx - 46}" y="${dy + 2}" width="92" height="4" fill="rgba(0,0,0,.25)"/><rect x="${cx + 12}" y="${dy - 8}" width="26" height="12" rx="2" style="fill:var(--tool)"/><rect x="${cx + 20}" y="${dy - 12}" width="10" height="5" rx="2" fill="none" stroke="#1d1a14" stroke-width="1.6"/><path d="M${cx - 34} ${dy - 2}l14 6M${cx - 30} ${dy - 4}v8" stroke="#9aa0a6" stroke-width="2.4" stroke-linecap="round"/>`;
-}
-const bricks = (x, y) => [3, 2, 1].map((cnt, r) => Array.from({ length: cnt }, (_, c) => `<rect x="${x + c * 14 + r * 7}" y="${y - r * 8}" width="13" height="7" style="fill:var(--brick)" stroke="rgba(0,0,0,.3)"/>`).join("")).join("");
-// The plan: rooms in rows of two, each as wide as its desks need; seats spread over the room.
-function layout() {
-  const W = 1000, rowH = 240, gap = 56, out = { rooms: [], seats: {}, H: 0 };
-  const rs = rooms();
-  let y = 40;
-  for (let i = 0; i < rs.length; i += 2) {
-    const row = rs.slice(i, i + 2), weight = row.map(r => Math.max(1.6, r.agents.length));
-    const inner = W - 60 - (row.length - 1) * 30, total = weight.reduce((a, b) => a + b, 0);
-    let x = 30;
-    row.forEach((r, k) => {
-      const w = inner * weight[k] / total;
-      out.rooms.push({ r, x, y, w, h: rowH, floor: ROOM_FLOOR[r.id] || FLOORS[(i + k) % FLOORS.length] });
-      r.agents.forEach((a, j) => { out.seats[a] = [x + w * (j + 0.5) / r.agents.length, y + rowH * 0.6] });
-      x += w + 30;
-    });
-    y += rowH + gap;
-  }
-  out.H = y - gap + 40;
-  return out;
-}
-function floorSVG(L) {
-  const parts = [`<rect width="1000" height="${L.H}" fill="url(#yard)"/>`];
-  L.rooms.forEach(({ r, x, y, w, h, floor }, n) => {
-    parts.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="url(#${floor})" style="stroke:var(--wall)" stroke-width="6"/>`);
-    // The entrance: a gap in the wall with hazard tape across the threshold.
-    parts.push(`<rect x="${x + w / 2 - 28}" y="${n % 4 < 2 ? y + h - 5 : y - 5}" width="56" height="10" fill="url(#hazard)"/>`);
-    r.agents.forEach((a, j) => {
-      const cx = x + w * (j + 0.5) / r.agents.length, dy = y + h * 0.6 + 22;
-      // The foreman's plan table, with the rolled-up drawings.
-      if (a === "main") parts.push(`<rect x="${cx - 70}" y="${y + h - 50}" width="140" height="32" rx="3" style="fill:var(--desk)"/><rect x="${cx - 60}" y="${y + h - 46}" width="78" height="24" style="fill:var(--sheet)"/><path d="M${cx - 54} ${y + h - 40}h40M${cx - 54} ${y + h - 33}h60M${cx - 54} ${y + h - 27}h30" style="stroke:var(--ink)" stroke-width="1.2"/><rect x="${cx + 26}" y="${y + h - 44}" width="36" height="7" rx="3.5" style="fill:var(--sheet)" stroke="var(--ink)"/><rect x="${cx + 26}" y="${y + h - 34}" width="36" height="7" rx="3.5" style="fill:var(--sheet)" stroke="var(--ink)"/>`);
-      else parts.push(station(floor, cx, dy));
-    });
-    parts.push(cone(x + w - 22, y + 22));
-    if (!r.agents.includes("main")) parts.push(cone(x + 22, y + h - 24));
-    if (floor === "fw") parts.push(bricks(x + w - 62, y + h - 18));
-  });
-  return `<svg class="floor-svg" viewBox="0 0 1000 ${L.H}" preserveAspectRatio="none" aria-hidden="true">${DEFS}${parts.join("")}</svg>`;
-}
-
-let lastGroups = [];
+let lastGroups = [], wtInfo = [];
 let sel = null, openFile = null, openBot = null, attention = [], seenAlerts = null, attnSig = "", lastTask = null;
 const readHash = () => { const m = location.hash.match(/^#(\d+)\/(.+)$/); return m ? { wt: +m[1], id: decodeURIComponent(m[2]) } : null };
 
@@ -1318,8 +1445,46 @@ async function tick() {
   if (again) { again = false; tick() }
 }
 
+// The project picker: the projects of the registry, each with its alert count; a project that
+// is not on screen and starts waiting on you chimes and notifies, like the one on screen.
+async function loadProjects() {
+  const ps = await getJSON("api/projects");
+  projects = Array.isArray(ps) ? ps : [];
+  if (!projects.length) { proj = null; $("projmenu").hidden = true; return }
+  if (proj == null || !projects[proj]) {
+    let want = new URLSearchParams(location.search).get("project"), saved = null;
+    try { saved = localStorage.getItem("foreman-project") } catch (e) {}
+    const pick = (want && projects.find(x => x.name === want)) || (saved && projects.find(x => x.root === saved)) || projects.find(x => x.here) || projects[0];
+    proj = pick.p;
+    if (stream) connect();
+  }
+  projects.forEach(x => {
+    if (x.p !== proj && x.pending > (projSeen[x.root] ?? x.pending)) {
+      beep();
+      if ("Notification" in window && Notification.permission === "granted") new Notification(t("proj.needs", { name: x.name }), { tag: "foreman-proj-" + x.name });
+    }
+    projSeen[x.root] = x.pending;
+  });
+  $("projmenu").hidden = projects.length < 2;
+  const cur = projects[proj];
+  const others = projects.filter(x => x.p !== proj).reduce((n, x) => n + x.pending, 0);
+  setHTML($("proj-pick"), `<span class="live-dot${cur.live ? " on" : ""}"></span><span class="pick">${esc(cur.name)}</span>${others ? `<span class="badge">${others}</span>` : ""}`);
+  setHTML($("projects"), projects.map(x => `<button class="task${x.p === proj ? " sel" : ""}" data-proj="${x.p}"><div class="t"><span class="live-dot${x.live ? " on" : ""}" title="${x.live ? esc(t("proj.live")) : ""}"></span><span class="id">${esc(x.name)}</span>${x.pending ? `<span class="badge">${x.pending}</span>` : ""}</div><div class="sub">${esc(x.root)}</div></button>`).join(""));
+  $("projects").querySelectorAll("[data-proj]").forEach(b => b.onclick = () => selectProject(+b.dataset.proj));
+}
+function selectProject(i) {
+  $("projmenu").open = false;
+  if (i === proj || !projects[i]) return;
+  proj = i;
+  try { localStorage.setItem("foreman-project", projects[i].root) } catch (e) {}
+  history.replaceState(null, "", location.pathname + "?project=" + encodeURIComponent(projects[i].name));
+  sel = null; openFile = null; openBot = null; lastTask = null; chatQueue = null; attnSig = "";
+  connect(); tick();
+}
 async function render() {
-  const [tasks, attn, flow] = await Promise.all([getJSON("api/tasks"), getJSON("api/attention?visible=" + (document.visibilityState === "hidden" ? "0" : "1")), getJSON("flow.json")]);
+  await loadProjects();
+  const [tasks, attn, flow, wts] = await Promise.all([getJSON("api/tasks"), getJSON("api/attention?visible=" + (document.visibilityState === "hidden" ? "0" : "1")), getJSON("flow.json"), getJSON("api/worktrees")]);
+  wtInfo = Array.isArray(wts) ? wts : [];
   flowCfg = flow && typeof flow === "object" ? flow : {};
   // A server started before the alerts existed answers 404 here: that is not "no alert".
   if (attn === null || TOKEN === PLACEHOLDER) throw new Error(t("outdated"));
@@ -1329,15 +1494,26 @@ async function render() {
   // A worktree with alerts and no task still gets a row: the triage session is the one that waits most.
   attention.forEach(a => { if (!groups.some(g => g.wt === a.wt)) groups.push({ wt: a.wt, name: a.name, branch: a.branch, here: a.here, tasks: [] }) });
   groups.sort((a, b) => a.wt - b.wt);
-  showNeeds(groups);
-  const pending = (wt) => needItems.filter(i => i.wt === wt && NEED_GROUPS.includes(i.group)).length;
+  // The task on screen first: what waits on you elsewhere is everything but its alerts.
   sel = readHash() || sel;
   if (!sel || !groups.some(g => g.wt === sel.wt && g.tasks.some(k => k.id === sel.id))) {
     const all = groups.flatMap(g => g.tasks.map(k => ({ ...k, wt: g.wt, here: g.here })));
     const pick = all.find(k => k.here && k.current) || all.filter(k => k.status === "running").sort((a, b) => b.updated - a.updated)[0] || all[0];
     sel = pick ? { wt: pick.wt, id: pick.id } : null;
   }
-  renderSide(groups);
+  showAttention();
+  showTodo(groups);
+  const pending = (wt) => { const g = attention.find(a => a.wt === wt); return g ? g.alerts.length + (g.memory_actions || g.memory_requests || []).length + (g.mr_check ? 1 : 0) : 0 };
+  setHTML($("tasks"), groups.map(g => `
+    <div class="wt"><b>${esc(g.name)}</b>${g.branch ? " · " + esc(g.branch) : ""}${g.here ? " · " + t("here") : ""}${pending(g.wt) ? `<span class="badge" title="${esc(t("pending.badge"))}">${pending(g.wt)}</span>` : ""}</div>
+    ${g.tasks.map(k => `<button class="task${sel && sel.wt === g.wt && sel.id === k.id ? " sel" : ""}" data-wt="${g.wt}" data-id="${esc(k.id)}">
+      <div class="t"><span class="id">${k.current ? "● " : ""}${esc(k.id)}</span>${statusBadge(shown(k))}</div>
+      <div class="sub">${esc(k.title) || "&nbsp;"}</div></button>`).join("")}`).join("") || `<div class="meta" style="padding:0 14px">${t("no.task.any")}</div>`);
+  $("tasks").querySelectorAll(".task").forEach(b => b.onclick = () => { $("taskmenu").open = false; select(+b.dataset.wt, b.dataset.id) });
+  // The task picker in the top bar: the task on screen, and how many things wait on you.
+  const cur = sel && groups.flatMap(g => g.tasks.map(k => ({ ...k, wt: g.wt, wtName: g.name }))).find(k => k.wt === sel.wt && k.id === sel.id);
+  const waitingN = groups.reduce((n, g) => n + pending(g.wt), 0);
+  setHTML($("task-pick"), `<span class="pick">${cur ? `<b>${esc(cur.id)}</b> · ${esc(cur.title || cur.wtName)}` : t("pick.none")}</span>${cur ? statusBadge(shown(cur)) : ""}${waitingN ? `<span class="badge">${waitingN}</span>` : ""}`);
   await showTask();
 }
 
@@ -1348,6 +1524,7 @@ async function render() {
 // the rest; done tasks with nothing to do sit in a closed "Done (n)".
 const RUNNING = ["running", "fixing"], BAD = ["FAIL", "blocked"];
 let sideFilter = "";
+const pending = (wt) => needItems.filter(i => i.wt === wt && NEED_GROUPS.includes(i.group)).length;
 function sideCounts(groups) {
   const per = new Map(), loose = new Map();
   needItems.filter(i => NEED_GROUPS.includes(i.group) && i.wt != null).forEach(i => {
@@ -1378,7 +1555,7 @@ function renderSide(groups) {
     const live = ks.filter(x => !(x.k.status === "done" && !x.n)).sort((a, b) => sideRank(a.k, a.n) - sideRank(b.k, b.n));
     done.push(...ks.filter(x => x.k.status === "done" && !x.n).map(x => ({ g, ...x })));
     const extra = loose.get(g.wt) || 0, grouped = g.tasks.length > 1;
-    if (!live.length && !extra) return;
+    if (!live.length && !extra && !pending(g.wt)) return;
     const head = grouped || (!g.tasks.length && extra) || (extra && live.length !== 1)
       ? `<div class="wt" title="${esc(extra ? t("side.wt-items") : "")}">${extra ? '<i class="sdot amber" aria-hidden="true"></i> ' : ""}<b>${esc(g.name)}</b>${g.branch ? " · " + esc(g.branch) : ""}${g.here ? " · " + t("here") : ""}${extra ? `<span class="badge" title="${esc(t("side.items", { n: extra }))}">${extra}</span>` : ""}</div>` : "";
     blocks.push({ rank: Math.min(extra ? 0 : 9, ...live.map(x => sideRank(x.k, x.n))), html: head + live.map(x => sideRow(g, x.k, x.n, grouped)).join("") });
@@ -1479,13 +1656,23 @@ function select(wt, id) {
   history.replaceState(null, "", "#" + wt + "/" + encodeURIComponent(id)); tick();
 }
 
+// What waits on the dev besides the alerts: memory requests, failed PR/MR checks, tasks whose
+// next move is the dev's, done tasks to clean. Each ends with its action and a whole command.
+function showTodo(groups) {
+  // The needs list is rendered from buildNeeds() in showAttention(), so this legacy entry point
+  // intentionally does not render a second, competing list.
+}
+
+
 // An alert answered where it shows: a question, a permission or a session's turn, while the hook
 // holds it for the page. Not held, it says where to answer and, when there is one, the command.
-function alertBody(a, n) {
+// p: the box the alert is drawn in. Radios group by name across the whole page, so the same
+// question in two boxes needs two names, or checking one unchecks the other.
+function alertBody(a, n, p = "") {
   if (a.kind === "question") {
     const qs = (a.questions || []).map((qq, i) => `<div class="q">${esc(qq.header ? qq.header + ": " : "")}${esc(qq.question)}</div>` +
-      qq.options.map((o, j) => `<label><input type="${qq.multiSelect ? "checkbox" : "radio"}" name="a${n}q${i}" value="${j}"${a.held || a.released ? "" : " disabled"}> ${esc(o.label)} <span class="opt-d">${esc(o.description)}</span></label>`).join("") +
-      (a.held || a.released ? `<label>${qq.multiSelect ? "" : `<input type="radio" name="a${n}q${i}" value="other"> `}${t("alert.other")} <input type="text" data-other="${i}" style="width:min(420px,100%)"></label>` : "")).join("");
+      qq.options.map((o, j) => `<label><input type="${qq.multiSelect ? "checkbox" : "radio"}" name="${p}a${n}q${i}" value="${j}"${a.held || a.released ? "" : " disabled"}> ${esc(o.label)} <span class="opt-d">${esc(o.description)}</span></label>`).join("") +
+      (a.held || a.released ? `<label>${qq.multiSelect ? "" : `<input type="radio" name="${p}a${n}q${i}" value="other"> `}${t("alert.other")} <input type="text" data-other="${i}" style="width:min(420px,100%)"></label>` : "")).join("");
     const foot = a.held ? `<div class="actions"><button class="primary" data-send="${n}">${t("alert.send")}</button><button data-release="${n}">${t("alert.release")}</button></div>`
       : a.released ? goneHTML(a, n)
       : a.answers ? `<div class="meta">${t("alert.notheld")}</div>`
@@ -1494,13 +1681,13 @@ function alertBody(a, n) {
   }
   const detail = `<details><summary>${t("lane.more")}</summary><div class="meta">${esc(a.detail)}</div></details>`;
   if (a.kind === "permission")
-    return `<div class="action">${t(a.held ? "perm.held" : "action.approve-in-terminal", { tool: a.tool || "" })}</div>${detail}` +
+    return `<div class="action">${t(a.held ? "perm.held" : "action.approve-in-terminal", { tool: a.tool || "", wt: a.wtName, session: String(a.session || "").slice(0, 8) })}</div>${detail}` +
       (a.held ? `<div class="actions"><button class="primary" data-allow="${n}">${t("perm.allow")}</button><button class="danger" data-deny="${n}">${t("perm.deny")}</button><button data-release="${n}">${t("alert.release")}</button></div>` : "");
   // The whole last message, open and scrolled to its end, where the session puts its ask.
   return `<div class="turn-msg" data-turn-msg>${esc(a.message || a.detail)}</div>` + (a.held
     ? `<textarea rows="3" data-msg="${n}" placeholder="${esc(t("turn.placeholder"))}" style="margin-top:6px"></textarea><div class="actions"><button class="primary" data-reply="${n}">${t("turn.send")}</button><button data-release="${n}">${t("alert.release")}</button></div>`
     : a.released ? goneHTML(a, n)
-    : a.turns ? `<div class="action">${t("action.prompt-session", { wt: a.wtName })}</div>`
+    : a.turns ? `<div class="action">${t("action.prompt-session", { wt: a.wtName, session: String(a.session || "").slice(0, 8) })}</div>`
     : `<div class="action">${t("turn.off", { wt: a.wtName })}</div><div class="actions"><button class="primary" data-switch="turns" data-wt="${a.wt}" data-on="1">${t("switch.turn-on.turns")}</button></div>${cmdBlock(`cd ${q(a.path || ".")} && bash .claude/kit/scripts/work.sh ui turns on`)}`);
 }
 // A question or turn whose hold let go (released, with when and why, from the server): the page
@@ -1683,8 +1870,10 @@ function markSeen(row) {
   if (dot) dot.hidden = true;
 }
 let needCount = 0;
-function showNeeds(groups) {
-  const every = attention.flatMap(g => g.alerts.map(a => ({ ...a, wt: g.wt, wtName: g.name })));
+function showAttention() {
+  const every = attention.flatMap(g => g.alerts.map(a => ({ ...a, wt: g.wt, wtName: g.name, answers: g.answers, turns: g.turns, path: g.path })));
+  const all = every.filter(a => !(lastTask && sel && a.wt === sel.wt) && !inChat(a, a.wt) && !dismissed.has(akey(a)));
+  const hidden = every.filter(a => dismissed.has(akey(a)));
   const key = (a) => [a.wt, a.session, a.agent, a.kind, a.since].join("/");
   if (seenAlerts === null) seenAlerts = new Set(every.map(key));
   else every.forEach(a => {
@@ -1695,26 +1884,31 @@ function showNeeds(groups) {
       // Kind and tool only: the OS keeps notifications, and the detail may carry a command line.
       new Notification(`${a.wtName}: ${t("kind." + a.kind)}`, { body: a.tool || "", tag: key(a) });
   });
-  needItems = buildNeeds(groups);
-  const wrap = $("needs");
-  [...NEED_GROUPS, "idle", "progress"].forEach(g => {
-    const xs = needItems.filter(i => i.group === g), sec = wrap.querySelector(`[data-group="${g}"]`);
-    sec.hidden = !xs.length;
-    sec.querySelector(".ngroup-h .n").textContent = xs.length || "";
-    patchRows(sec.querySelector(".nlist"), xs.map(i => ({ key: i.key, html: needRowHTML(i) })));
-  });
-  // The title, the list's count (a polite live region) and the sidebar badges count the same items.
+  needItems = buildNeeds(lastGroups);
   needCount = needItems.filter(i => NEED_GROUPS.includes(i.group)).length;
-  $("needs-count").textContent = needCount ? t("needs.count", { n: needCount }) : "";
   document.title = (needCount ? `(${needCount}) ` : "") + "Foreman";
+  // Re-rendered only when the set changes, so a half-written answer survives the refresh.
+  const sig = JSON.stringify([lang, needItems.map(i => [i.key, i.group, i.say, i.badge, i.primary]), hidden.length]);
+  if (sig === attnSig) return;
+  attnSig = sig;
+  $("needs-count").textContent = needCount ? `(${needCount})` : "";
+  const ids = { answer: "attn", approve: "needs-approve", decide: "needs-decide", ship: "todo", idle: "needs-idle", progress: "needs-progress" };
+  NEED_GROUPS.concat(["idle", "progress"]).forEach(group => {
+    const rows = needItems.filter(i => i.group === group).map(i => ({ key: i.key, html: needRowHTML(i) }));
+    const list = $(ids[group]);
+    patchRows(list, rows);
+    const box = list.closest(".ngroup");
+    box.hidden = !rows.length;
+    const label = box.querySelector(".ngroup-h");
+    label.textContent = `${t("needs.g." + group)} · ${rows.length}`;
+    if (group === "progress") box.open = false;
+  });
+  $("waiting").hidden = needItems.length === 0;
   const s = seenSet();
-  wrap.querySelectorAll("[data-row]").forEach(r => { const d = r.querySelector("[data-new]"); if (d) d.hidden = s.has(r.dataset.row) });
-  wrap.querySelectorAll(".nago[data-since]").forEach(n => { n.textContent = ago(+n.dataset.since) });
-  const hidden = attention.flatMap(g => g.alerts.map(a => ({ ...a, wt: g.wt, wtName: g.name }))).filter(a => dismissed.has(akey(a)));
-  setHTML($("dismissed-box"), hidden.length ? `<details class="dismissed"><summary>${t("dismissed.count", { n: hidden.length })}</summary>${hidden.map(a => `<div class="nrow"><b>${esc(a.wtName)}</b> · ${t("kind." + a.kind)} <button type="button" data-restore="${esc(akey(a))}">${t("dismiss.restore")}</button></div>`).join("")}</details>` : "");
-  $("waiting").hidden = !needItems.length && !hidden.length;
-  setHTML($("legend"), (needItems.length ? "" : t("waiting.none") + " ") + `<details><summary>${t("legend.more")}</summary>${t("legend.text")}</details>`);
-  wireAlerts(wrap, rowAlerts);
+  document.querySelectorAll("[data-row]").forEach(r => {
+    const d = r.querySelector("[data-new]");
+    if (d) d.hidden = s.has(r.dataset.row);
+  });
 }
 // A look at a row (pointer, focus, click) marks it seen; its buttons open, decide, go or dismiss.
 ["mouseover", "focusin", "click"].forEach(evn => $("waiting").addEventListener(evn, (e) => {
@@ -1744,7 +1938,7 @@ function decideIn(wt, id) {
   tick();
 }
 let pendingScroll = false;
-function wireAlerts(box, all) {
+function wireAlerts(box, all, p = "") {
   const send = async (a, extra, el) => {
     const r = await post("api/answer", { wt: a.wt, session: a.session, agent: a.agent, qid: a.qid, ...extra });
     if (!r.ok) el.insertAdjacentHTML("beforeend", await errorText(r));
@@ -1762,7 +1956,7 @@ function wireAlerts(box, all) {
   box.querySelectorAll("[data-send]").forEach(b => b.onclick = () => {
     const n = +b.dataset.send, a = all[n], el = b.closest(".alert, .pop");
     const answers = a.questions.map((qq, i) => {
-      const picked = [...el.querySelectorAll(`input[name="a${n}q${i}"]:checked`)].map(x => x.value);
+      const picked = [...el.querySelectorAll(`input[name="${p}a${n}q${i}"]:checked`)].map(x => x.value);
       const text = el.querySelector(`input[data-other="${i}"]`).value.trim();
       const options = picked.filter(v => v !== "other").map(Number);
       const useOther = qq.multiSelect ? text : (picked.includes("other") || !options.length) ? text : "";
@@ -1774,10 +1968,17 @@ function wireAlerts(box, all) {
 
 async function showTask() {
   const d = sel && await getJSON(`api/task?wt=${sel.wt}&id=${encodeURIComponent(sel.id)}`);
+  const had = !!lastTask;
   lastTask = d;
+  // The alerts of the task on screen live in its Now panel, not in "Waiting on you".
+  if (had !== !!d) showAttention();
   if (!d) {
-    $("body").hidden = true; $("title").textContent = "Foreman"; $("where").textContent = "";
-    setHTML($("now"), `<div class="meta">${t("no.task")}</div>`);
+    $("title").textContent = "Foreman"; $("where").textContent = "";
+    // No task: the site still shows, the crew idle in the break room, and the simulation button.
+    const g = wtInfo.find(x => x.here) || lastGroups.find(x => x.here) || lastGroups[0] || { wt: 0, name: "" };
+    $("body").hidden = true;
+    setHTML($("now"), `<div class="meta">${t("site.notask")}</div>`);
+    showOffice({ none: true, id: "", wt: g.wt, worktree: g.name, agents: [], stages: [], findings: [] }, [{ key: "purpose" }], 0);
     return;
   }
   $("body").hidden = false;
@@ -1787,7 +1988,6 @@ async function showTask() {
   setHTML($("where"), `<span class="crumb">${esc(d.worktree)}</span>${d.branch ? `<span class="crumb">${esc(d.branch)}</span>` : ""}<span class="crumb">${esc(d.id)}</span><span class="crumb here">${list[now].label}</span>` +
     (d.lane ? `<span class="meta"> · ${t("where.extra", { lane: word("lane.", d.lane), rounds: d.rounds ?? 0, max: d.max_rounds ?? 3, clarified: d.clarified ?? 0 })}</span>` : ""));
   showNow(d, list, now);
-  setTab(tab);
   showTree(d, list, now);
   showOffice(d, list, now);
   setHTML($("rulings"), (d.rulings || []).length ? d.rulings.slice(-12).map(rulingHTML).join("") : `<div class="meta">${t("rulings.none")}</div>`);
@@ -1860,8 +2060,9 @@ function showNow(d, list, now) {
   else if (mr && mr.error && d.status !== "done") extra.push(`<span class="warn">${has("mr." + mr.error) ? t("mr." + mr.error) : t("mr.error", { error: mr.error })}</span>`);
   if (d.warning) extra.push(`<span class="bad">${has("warning." + d.warning) ? t("warning." + d.warning) : esc(d.warning)}</span>`);
   if (d.closed_by === "work.sh") extra.push(`<span class="meta">${t("closed.work.sh")}</span>`);
-  setHTML($("now"), `<div class="now ${act ? "act" : "wait"}"><div class="verb">${t(act ? "now.act" : "now.wait")}</div><div class="nowbody"><div class="nowhead">${statusBadge(s)} <span class="meta">${statusMeaning(s)}</span></div>${body}${extra.length ? `<div class="extra">${extra.join(" · ")}</div>` : ""}</div></div>`);
+  setHTML($("now"), `<div class="now ${act ? "act" : "wait"}"><div class="verb">${t(act ? "now.act" : "now.wait")}</div><div class="nowbody"><div class="nowhead">${statusBadge(s)} <span class="meta">${statusMeaning(s)}</span></div>${body}${extra.length ? `<div class="extra">${extra.join(" · ")}</div>` : ""}${switchesLine(sel.wt)}</div></div>`);
   $("now").querySelectorAll("[data-decide]").forEach(b => b.onclick = () => decideIn(+b.dataset.decide, b.dataset.id));
+  wireFindings($("now"), d);
   if ($("clean-one")) $("clean-one").onclick = () => openCleanup(`wt=${sel.wt}&id=${encodeURIComponent(d.id)}`, false);
   if ($("close-one")) $("close-one").onclick = () => openClose(d, sel.wt);
 }
@@ -1942,15 +2143,17 @@ async function tellDecided(d, wt, ok) {
 
 // The task as a tree: each step a node, the reviews with their findings as children, a step's
 // file under it when the dev opens it. The node the task is at says "you are here".
-let tab = "tree";
-try { tab = localStorage.getItem("agent-flow-tab") === "office" ? "office" : "tree" } catch (e) {}
+// The world is always on screen ("office"); the side panel shows the task ("tree") or the crew.
+let tab = "office", pane = "tree";
+try { pane = localStorage.getItem("agent-flow-tab") === "office" ? "office" : "tree" } catch (e) {}
 function setTab(name) {
-  tab = name;
-  try { localStorage.setItem("agent-flow-tab", tab) } catch (e) {}
-  $("tree").hidden = tab !== "tree"; $("plan").hidden = tab !== "office";
-  document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  pane = name;
+  try { localStorage.setItem("agent-flow-tab", pane) } catch (e) {}
+  $("pane-task").hidden = pane !== "tree"; $("pane-crew").hidden = pane !== "office";
+  document.querySelectorAll("[data-tab]").forEach(b => b.classList.toggle("on", b.dataset.tab === pane));
 }
-document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { setTab(b.dataset.tab); if (lastTask) { $("plan").dataset.html = ""; showTask() } });
+setTab(pane);
+document.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => setTab(b.dataset.tab));
 const openNodes = new Set();
 function showTree(d, list, now) {
   const lanes = lanesOf(d);
@@ -1995,37 +2198,596 @@ function showTree(d, list, now) {
   }
 }
 
-// The office: a floor plan in the spirit of a virtual office. One room per stage (flow.json
-// "rooms"), each agent a robot at its desk with its name tag, a bubble while it works and a raised
-// hand when it needs the dev; "You" sit with the main session; the task's card stands in the room
-// of its step.
+// The site as a virtual office: a world of tiles seen from above, in pixel art drawn here (no image
+// files). You walk your own avatar (WASD, the arrows, or a click on the floor); the crew are workers
+// in hard hats of their role's color who find their way along the halls and through the doors.
+// Coming close to one opens its card; coming close to the foreman (the main session) lights the
+// chat with it. Nothing here talks to the server: it draws what the page already knows.
+const T = 32;  // a tile, in world pixels (16 art pixels of 2)
+const ROOM_KIND = { refine: "carpet", workshop: "concrete", review: "tiles", decision: "wood" };
+const KINDS = ["carpet", "concrete", "tiles", "wood"];
+const PAL = {
+  grass: "#7cb35b", grass2: "#6fa64f", flower: "#f4d35e", flower2: "#f28dab", tree: "#2f7d46", tree2: "#3f9a55", trunk: "#7a4f2c",
+  hall: "#ddd6c8", hall2: "#d1c9b9", wallTop: "#3a3f4d", wallTop2: "#454b5b", wallFace: "#ece4d2", wallFace2: "#ddd2bb", base: "#8c7a62",
+  carpet: "#4a74b8", carpet2: "#5583c6", concrete: "#aeb2b8", concrete2: "#a1a5ac", tiles: "#a3d4b4", tiles2: "#93c8a6",
+  wood: "#c99665", wood2: "#bb8754", lounge: "#e6c3a6", lounge2: "#dcb596",
+  desk: "#7b4f2e", deskTop: "#a8713f", deskTop2: "#b98450", monitor: "#262a35", screen: "#7fd3ff", paper: "#f7f4ea",
+  leaf: "#3f9a55", leaf2: "#5cbc70", pot: "#c0703f", sofa: "#3f8f94", sofa2: "#5aaeb4", rug: "#c9708e", rug2: "#d98aa4",
+  shelf: "#7a4f2c", books: ["#e76f51", "#2a9d8f", "#e9c46a", "#457b9d", "#9b5de5"], board: "#f5f5f0", ink: "#3557a0",
+  cone: "#f07c22", stripe: "#f2b705", dark: "#1d1a14", brick: "#b5583c", metal: "#7d848f", metal2: "#9aa1ab", water: "#8fd3ff",
+  skins: ["#f1c7a5", "#e0b08a", "#c68e62", "#9a6a45", "#6f4a30"], pants: "#3b4252", shoe: "#2a2a2a", hair: ["#3b2a20", "#1e1e1e", "#7a4b2a", "#c58b4c"],
+};
+const hashOf = (s) => [...String(s)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+const roleColor = (r) => r === "main" ? "#f4f3ee" : (ROLES[r] || [/^#[0-9a-fA-F]{3,8}$/.test(agentCfg(r).color || "") ? agentCfg(r).color : "#8b98ad"])[0];
+
+// ---- the map: rooms of flow.json in rows of two, halls around them, the break room under them
+function buildWorld() {
+  const rs = rooms(), W = 46, M = 2, RH = 10, GAP = 3, LH = 9;
+  const bx = M, iw = W - 2 * M, x0 = bx + 3, xEnd = bx + iw - 4;
+  const rows = Math.ceil(rs.length / 2), bottom = M + 3 + rows * (RH + GAP) + LH + 1;
+  const H = bottom + 1 + M + 1;
+  const type = Array.from({ length: H }, () => Array(W).fill("grass"));
+  const kind = Array.from({ length: H }, () => Array(W).fill(""));
+  const solid = Array.from({ length: H }, () => Array(W).fill(false));
+  const deco = [];  // {x, y, w, h, what, solid}
+  const wr = { W, H, rooms: [], seats: {}, rest: {}, type, kind, solid, deco };
+  const box = (x, y, w, h, top2) => {  // walls around, floor inside
+    for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) {
+      const edge = i === x || i === x + w - 1 || j === y || j === y + h - 1 || (top2 && j === y + 1);
+      type[j][i] = edge ? (top2 && j === y + 1 && i !== x && i !== x + w - 1 ? "face" : "wall") : "floor";
+    }
+  };
+  // The building: its outer wall, a hall inside, a door to the garden at the bottom.
+  box(bx, M, iw, bottom - M + 1, true);
+  for (let j = M + 2; j < bottom; j++) for (let i = bx + 1; i < bx + iw - 1; i++) { type[j][i] = "hall"; }
+  const gate = bx + Math.floor(iw / 2) - 1;
+  type[bottom][gate] = type[bottom][gate + 1] = "hall";
+  let y = M + 3;
+  for (let i = 0; i < rs.length; i += 2) {
+    const row = rs.slice(i, i + 2), weight = row.map(r => Math.max(2, r.agents.length));
+    const avail = xEnd - x0 + 1 - (row.length - 1) * 2, total = weight.reduce((a, b) => a + b, 0);
+    let x = x0;
+    row.forEach((r, k) => {
+      const w = k === row.length - 1 ? xEnd - x + 1 : Math.round(avail * weight[k] / total);
+      const R = { r, x, y, w, h: RH, kind: ROOM_KIND[r.id] || KINDS[(i + k) % KINDS.length], door: { x: x + Math.floor(w / 2) - 1, y: y + RH - 1 } };
+      box(x, y, w, RH, true);
+      for (let j = y + 2; j < y + RH - 1; j++) for (let ii = x + 1; ii < x + w - 1; ii++) kind[j][ii] = R.kind;
+      type[R.door.y][R.door.x] = type[R.door.y][R.door.x + 1] = "floor";
+      kind[R.door.y][R.door.x] = kind[R.door.y][R.door.x + 1] = R.kind;
+      wr.rooms.push(R);
+      x += w + 2;
+    });
+    y += RH + GAP;
+  }
+  const L = { r: { id: "lounge" }, x: x0, y, w: xEnd - x0 + 1, h: LH, kind: "lounge" };
+  L.door = { x: L.x + Math.floor(L.w / 2) - 1, y };
+  box(L.x, y, L.w, LH, true);
+  for (let j = y + 2; j < y + LH - 1; j++) for (let i = L.x + 1; i < L.x + L.w - 1; i++) kind[j][i] = "lounge";
+  for (let d = 0; d < 3; d++) for (let j = y; j < y + 2; j++) { type[j][L.door.x + d] = "floor"; kind[j][L.door.x + d] = "lounge" }
+  wr.lounge = L;
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) solid[j][i] = type[j][i] === "wall" || type[j][i] === "face" || i === 0 || j === 0 || i === W - 1 || j === H - 1;
+  const put = (x, yy, w, h, what, block = true) => { deco.push({ x, y: yy, w, h, what }); if (block) for (let j = yy; j < yy + h; j++) for (let i = x; i < x + w; i++) solid[j][i] = true };
+  // Furniture: a desk in front of each seat, the foreman's plan table, the room's own things.
+  wr.rooms.forEach(R => {
+    const n = R.r.agents.length, sy = R.y + 4;
+    R.r.agents.forEach((a, j) => {
+      const sx = R.x + 1 + Math.floor((R.w - 2) * (j + 0.5) / n);
+      wr.seats[a] = [sx, sy];
+      put(sx - 1, sy + 1, 3, 1, a === "main" ? "table" : "desk:" + R.kind);
+    });
+    const top = R.y + 2, low = R.y + R.h - 2, l = R.x + 1, rr = R.x + R.w - 2;
+    if (R.kind === "concrete") { put(l, top, 1, 1, "cone"); put(rr, top, 1, 1, "bricks"); put(l, low, 1, 1, "cone"); put(rr, low, 1, 1, "toolbox"); deco.push({ x: R.door.x, y: R.door.y - 1, w: 2, h: 1, what: "hazard" }) }
+    else {
+      put(l, top, 1, 1, "plant"); put(rr, low, 1, 1, "plant");
+      if (R.kind === "carpet") { put(rr - 1, top, 2, 1, "shelf"); deco.push({ x: R.x + Math.floor(R.w / 2) - 1, y: R.y + 1, w: 3, h: 1, what: "board" }) }
+      else if (R.kind === "tiles") { put(rr, top, 1, 1, "cabinet"); put(rr - 1, top, 1, 1, "cabinet") }
+      else { put(rr - 1, top, 2, 1, "shelf"); put(l, low, 1, 1, "cooler") }
+    }
+    deco.push({ x: R.x + 1, y: R.y + 1, w: 1, h: 1, what: "lamp" });
+  });
+  // The break room: sofas along the wall, a rug, a coffee table, the coffee machine, plants.
+  const cx = L.x + Math.floor(L.w / 2);
+  deco.push({ x: cx - 6, y: y + 4, w: 13, h: 3, what: "rug" });
+  for (let i = L.x + 3; i < L.x + L.w - 3; i++) if (i < cx - 2 || i > cx + 2) deco.push({ x: i, y: y + 2, w: 1, h: 1, what: "sofa" });
+  put(cx - 1, y + 5, 3, 1, "coffeetable");
+  put(L.x + 1, y + 2, 1, 1, "coffee"); put(L.x + L.w - 2, y + 2, 1, 1, "plant"); put(L.x + 1, y + LH - 2, 1, 1, "plant"); put(L.x + L.w - 2, y + LH - 2, 1, 1, "arcade");
+  const away = Object.keys(wr.seats).filter(a => a !== "main");
+  away.forEach((a, k) => {
+    const col = L.x + 3 + Math.floor((L.w - 6) * (k + 0.5) / away.length);
+    const row = k % 2 ? y + 6 : y + 2;
+    wr.rest[a] = [solid[row][col] ? col + 2 : col, row];
+  });
+  // The garden: trees and flowers around the building.
+  for (let i = 1; i < W - 1; i += 3) { put(i, H - 2, 1, 1, "tree"); if (i % 2) deco.push({ x: i + 1, y: 1, w: 1, h: 1, what: "flowers" }) }
+  for (let j = 4; j < H - 3; j += 4) { put(0 + 1, j, 1, 1, "tree"); put(W - 2, j, 1, 1, "tree") }
+  // Where the foreman stands, and the spots in front of its table where the crew comes to it.
+  const m = wr.seats.main || [cx, y + 3];
+  wr.boss = m;
+  wr.spots = [];
+  for (const dy of [2, 3]) for (const dx of [0, -2, 2, -1, 1, -3, 3]) { const p = [m[0] + dx, m[1] + dy]; if (type[p[1]] && !solid[p[1]][p[0]]) wr.spots.push(p) }
+  // You arrive in the hall, at the door of the foreman's office.
+  const bossRoom = wr.rooms.find(R => R.r.agents.includes("main"));
+  wr.start = bossRoom ? [bossRoom.door.x, bossRoom.door.y + 1] : [gate, bottom - 1];
+  wr.canvas = paintWorld(wr);
+  return wr;
+}
+
+// ---- pixel painting
+function pix(g, ox, oy) { return (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(ox + x * 2, oy + y * 2, w * 2, h * 2) } }
+function paintTile(g, wr, i, j) {
+  const t = wr.type[j][i], k = wr.kind[j][i], p = pix(g, i * T, j * T), alt = (i + j) % 2;
+  if (t === "grass") {
+    p(0, 0, 16, 16, alt ? PAL.grass : PAL.grass2);
+    const h = hashOf(i * 97 + j); if (h % 5 === 0) { p(h % 12 + 1, (h >> 3) % 12 + 1, 1, 2, PAL.grass2) } if (h % 11 === 0) p(h % 13 + 1, (h >> 4) % 13 + 1, 2, 2, h % 2 ? PAL.flower : PAL.flower2);
+  } else if (t === "hall") {
+    p(0, 0, 16, 16, PAL.hall); p(0, 0, 16, 1, PAL.hall2); p(0, 0, 1, 16, PAL.hall2);
+  } else if (t === "wall") {
+    p(0, 0, 16, 16, PAL.wallTop); p(0, 0, 16, 2, PAL.wallTop2);
+  } else if (t === "face") {
+    p(0, 0, 16, 16, PAL.wallFace); for (let x = 0; x < 16; x += 4) p(x, 0, 1, 13, PAL.wallFace2); p(0, 13, 16, 3, PAL.base);
+  } else if (t === "floor") {
+    if (k === "carpet") { p(0, 0, 16, 16, PAL.carpet); p(0, 0, 16, 1, PAL.carpet2); p(0, 0, 1, 16, PAL.carpet2); p(8, 0, 1, 16, PAL.carpet2); p(0, 8, 16, 1, PAL.carpet2) }
+    else if (k === "concrete") { p(0, 0, 16, 16, alt ? PAL.concrete : PAL.concrete2); const h = hashOf(i * 13 + j * 7); p(h % 14, (h >> 2) % 14, 1, 1, PAL.metal); p(0, 15, 16, 1, PAL.concrete2) }
+    else if (k === "tiles") { p(0, 0, 16, 16, alt ? PAL.tiles : PAL.tiles2); p(0, 0, 16, 1, "#b8e0c6") }
+    else if (k === "wood") { p(0, 0, 16, 16, PAL.wood); for (let r = 0; r < 16; r += 4) { p(0, r, 16, 1, PAL.wood2); p(((j * 5 + r) % 16), r, 1, 4, PAL.wood2) } }
+    else { p(0, 0, 16, 16, alt ? PAL.lounge : PAL.lounge2) }
+  }
+}
+function paintDeco(g, d) {
+  const p = pix(g, d.x * T, d.y * T);
+  switch (d.what) {
+    case "rug": { g.fillStyle = PAL.rug; g.fillRect(d.x * T + 4, d.y * T + 6, d.w * T - 8, d.h * T - 12); g.fillStyle = PAL.rug2; g.fillRect(d.x * T + 14, d.y * T + 16, d.w * T - 28, d.h * T - 32); return }
+    case "desk:carpet": case "desk:concrete": case "desk:tiles": case "desk:wood": case "desk:lounge": case "table": {
+      const w = d.w * 8;
+      p(1, 2, w - 2, 9, PAL.deskTop); p(1, 2, w - 2, 1, PAL.deskTop2); p(1, 11, w - 2, 3, PAL.desk); p(2, 14, 2, 2, PAL.desk); p(w - 4, 14, 2, 2, PAL.desk);
+      if (d.what === "table") { p(4, 3, 14, 7, PAL.paper); p(5, 5, 9, 1, PAL.ink); p(5, 7, 11, 1, PAL.ink); p(20, 4, 12, 2, PAL.paper); p(20, 7, 12, 2, PAL.paper); return }
+      p(w / 2 - 4, -2, 8, 7, PAL.monitor); p(w / 2 - 1, 5, 2, 2, PAL.monitor);
+      if (d.what === "desk:tiles") { p(3, 4, 5, 6, PAL.paper); p(4, 6, 3, 1, "#2f9e5b"); p(4, 8, 3, 1, "#2f9e5b") }
+      else if (d.what === "desk:carpet") { p(3, 4, 7, 5, PAL.paper); p(4, 6, 5, 1, PAL.ink) }
+      else if (d.what === "desk:concrete") { p(3, 5, 5, 3, PAL.cone); p(w - 9, 5, 6, 2, PAL.metal2) }
+      else { p(3, 5, 4, 4, PAL.paper); p(w - 7, 5, 3, 3, "#c0703f") }
+      return;
+    }
+    case "plant": p(5, 10, 6, 6, PAL.pot); p(4, 9, 8, 2, "#a85f33"); p(3, 2, 10, 8, PAL.leaf); p(5, 0, 6, 4, PAL.leaf2); p(2, 5, 3, 3, PAL.leaf2); p(11, 4, 3, 3, PAL.leaf2); return;
+    case "tree": p(6, 11, 4, 5, PAL.trunk); p(1, 1, 14, 11, PAL.tree); p(3, 0, 10, 3, PAL.tree2); p(3, 3, 4, 3, PAL.tree2); return;
+    case "flowers": p(3, 9, 2, 2, PAL.flower); p(9, 5, 2, 2, PAL.flower2); p(12, 11, 2, 2, PAL.flower); return;
+    case "shelf": { const w = d.w * 8; p(0, 0, w, 15, PAL.shelf); p(1, 1, w - 2, 13, "#5b3920"); for (let r = 0; r < 3; r++) for (let b = 0; b < w - 3; b += 2) p(1 + b, 2 + r * 4, 2, 3, PAL.books[(b + r) % 5]); return }
+    case "cabinet": p(2, 0, 12, 15, PAL.metal); p(3, 1, 10, 6, PAL.metal2); p(3, 8, 10, 6, PAL.metal2); p(7, 3, 2, 1, PAL.dark); p(7, 10, 2, 1, PAL.dark); return;
+    case "cooler": p(4, 0, 8, 6, PAL.water); p(3, 6, 10, 9, "#e8edf2"); p(5, 9, 2, 2, "#5aa9e6"); return;
+    case "cone": p(4, 13, 8, 2, PAL.cone); p(6, 3, 4, 10, PAL.cone); p(5, 7, 6, 2, "#ffffff"); return;
+    case "bricks": for (let r = 0; r < 3; r++) for (let c = 0; c < 3 - r; c++) p(1 + c * 5 + r * 2, 12 - r * 4, 4, 3, PAL.brick); return;
+    case "toolbox": p(2, 7, 12, 7, PAL.cone); p(5, 4, 6, 3, PAL.dark); p(6, 5, 4, 2, PAL.cone); return;
+    case "hazard": for (let x = 0; x < d.w * 16; x += 4) p(x, 13, 2, 3, PAL.stripe); return;
+    case "board": { const w = d.w * 8; p(1, 1, w - 2, 10, PAL.board); p(1, 1, w - 2, 1, PAL.metal); p(4, 4, 10, 1, PAL.ink); p(4, 6, 16, 1, PAL.ink); p(18, 3, 4, 4, "#e76f51"); return }
+    case "lamp": p(6, 2, 4, 3, "#fff3b0"); p(7, 5, 2, 1, PAL.metal); return;
+    case "sofa": p(0, 2, 16, 6, PAL.sofa); p(0, 8, 16, 6, PAL.sofa2); p(0, 14, 16, 1, PAL.sofa); return;
+    case "coffeetable": { const w = d.w * 8; p(1, 3, w - 2, 9, PAL.desk); p(2, 4, w - 4, 7, PAL.deskTop); p(8, 6, 3, 3, PAL.paper); p(w - 12, 6, 3, 3, PAL.paper); return }
+    case "coffee": p(2, 0, 12, 15, "#4b5563"); p(4, 2, 8, 4, PAL.dark); p(5, 3, 2, 1, "#ef4444"); p(6, 9, 4, 4, PAL.paper); return;
+    case "arcade": p(2, 0, 12, 15, "#7c3aed"); p(4, 2, 8, 6, PAL.dark); p(5, 3, 6, 4, "#22d3ee"); p(5, 10, 2, 2, "#f43f5e"); p(9, 10, 2, 2, "#facc15"); return;
+  }
+}
+function paintWorld(wr) {
+  const c = document.createElement("canvas");
+  c.width = wr.W * T; c.height = wr.H * T;
+  const g = c.getContext("2d");
+  for (let j = 0; j < wr.H; j++) for (let i = 0; i < wr.W; i++) paintTile(g, wr, i, j);
+  wr.deco.filter(d => d.what === "rug").forEach(d => paintDeco(g, d));
+  wr.deco.filter(d => d.what !== "rug").forEach(d => paintDeco(g, d));
+  return c;
+}
+// A person, 16x24 art pixels, feet at (fx, fy): a hard hat in the role's color, or hair for you.
+function drawPerson(g, fx, fy, o) {
+  const p = pix(g, Math.round(fx - 16), Math.round(fy - 46)), f = o.frame % 4, dir = o.dir;
+  g.fillStyle = "rgba(0,0,0,.22)"; g.beginPath(); g.ellipse(fx, fy - 1, 11, 4, 0, 0, Math.PI * 2); g.fill();
+  const lift = (f === 1 ? 1 : 0), lift2 = (f === 3 ? 1 : 0), side = dir === "left" || dir === "right";
+  // legs and shoes
+  if (side) { const a = f === 1 ? 2 : f === 3 ? -2 : 0; p(6 + a, 18, 2, 4, o.pants); p(8 - a, 18, 2, 4, o.pants); p(5 + a, 22, 3, 1, PAL.shoe); p(8 - a, 22, 3, 1, PAL.shoe) }
+  else { p(5, 18 - lift, 2, 4, o.pants); p(9, 18 - lift2, 2, 4, o.pants); p(5, 22 - lift, 2, 1, PAL.shoe); p(9, 22 - lift2, 2, 1, PAL.shoe) }
+  // body and arms
+  p(4, 11, 8, 8, o.shirt); p(4, 11, 8, 1, "rgba(255,255,255,.25)");
+  if (o.vest) { p(4, 14, 8, 1, "#fff59d"); p(4, 16, 8, 1, "#fff59d") }
+  const sw = side ? 0 : (f === 1 ? 1 : f === 3 ? -1 : 0);
+  if (dir !== "left") p(12, 12 + sw, 2, 5, o.shirt), p(12, 17 + sw, 2, 1, o.skin);
+  if (dir !== "right") p(2, 12 - sw, 2, 5, o.shirt), p(2, 17 - sw, 2, 1, o.skin);
+  // head
+  p(4, 3, 8, 8, o.skin);
+  if (dir === "down") { p(6, 7, 1, 2, "#1d1d1d"); p(9, 7, 1, 2, "#1d1d1d"); p(7, 10, 2, 1, "rgba(0,0,0,.25)") }
+  else if (dir === "left") { p(5, 7, 1, 2, "#1d1d1d"); p(3, 6, 1, 3, o.skin) }
+  else if (dir === "right") { p(10, 7, 1, 2, "#1d1d1d"); p(12, 6, 1, 3, o.skin) }
+  if (o.hat) {
+    p(3, 1, 10, 4, o.hat); p(4, 0, 8, 1, o.hat); p(2, 4, 12, 2, o.hat); p(7, 0, 2, 4, "rgba(0,0,0,.15)"); p(4, 1, 2, 2, "rgba(255,255,255,.35)");
+    if (dir === "up") p(3, 6, 10, 4, o.hair);
+  } else {
+    p(3, 1, 10, 4, o.hair); p(3, 4, 1, 4, o.hair); p(12, 4, 1, 4, o.hair);
+    if (dir === "up") p(4, 4, 8, 6, o.hair);
+  }
+}
+const avatarCache = {};
+function avatarImg(r, size) {
+  const k = r + "/" + size;
+  if (!avatarCache[k]) {
+    const c = document.createElement("canvas"); c.width = 32; c.height = 48;
+    drawPerson(c.getContext("2d"), 16, 47, looks(r, "down"));
+    avatarCache[k] = c.toDataURL();
+  }
+  return `<img class="avatar" src="${avatarCache[k]}" width="${Math.round(size * 2 / 3)}" height="${size}" alt="">`;
+}
+function looks(r, dir, frame = 0) {
+  const h = hashOf(r);
+  if (r === "you") return { dir, frame, shirt: "#e76f51", pants: "#264653", skin: PAL.skins[1], hair: PAL.hair[0], hat: null };
+  return { dir, frame, shirt: r === "main" ? "#f08c2e" : roleColor(r), pants: PAL.pants, skin: PAL.skins[h % PAL.skins.length], hair: PAL.hair[h % PAL.hair.length],
+    hat: r === "main" ? "#f4f3ee" : roleColor(r), vest: r === "main" };
+}
+
+// ---- finding the way: A* over the tiles, four directions
+function findPath(wr, from, to) {
+  const W = wr.W, ok = (x, y) => y >= 0 && y < wr.H && x >= 0 && x < W && !wr.solid[y][x];
+  let [gx, gy] = to;
+  if (!ok(gx, gy)) { const n = [[0, 1], [1, 0], [-1, 0], [0, -1], [1, 1], [-1, 1]].map(([a, b]) => [gx + a, gy + b]).find(([a, b]) => ok(a, b)); if (!n) return []; [gx, gy] = n }
+  const sx = Math.floor(from[0]), sy = Math.floor(from[1]), key = (x, y) => y * W + x;
+  const open = [[sx, sy]], came = new Map(), g = new Map([[key(sx, sy), 0]]), fsc = new Map([[key(sx, sy), Math.abs(sx - gx) + Math.abs(sy - gy)]]);
+  const closed = new Set();
+  while (open.length) {
+    let bi = 0; for (let i = 1; i < open.length; i++) if (fsc.get(key(...open[i])) < fsc.get(key(...open[bi]))) bi = i;
+    const [cx, cy] = open.splice(bi, 1)[0], ck = key(cx, cy);
+    if (cx === gx && cy === gy) { const out = []; let k = ck; while (came.has(k)) { out.unshift([k % W, Math.floor(k / W)]); k = came.get(k) } return out }
+    closed.add(ck);
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nx = cx + dx, ny = cy + dy, nk = key(nx, ny);
+      if (!ok(nx, ny) || closed.has(nk)) continue;
+      const ng = g.get(ck) + 1;
+      if (ng < (g.get(nk) ?? 1e9)) { came.set(nk, ck); g.set(nk, ng); fsc.set(nk, ng + Math.abs(nx - gx) + Math.abs(ny - gy)); if (!open.some(([a, b]) => a === nx && b === ny)) open.push([nx, ny]) }
+    }
+  }
+  return [];
+}
+
+// ---- the people and the loop
+let paneBefore = "tree", world = null, worldKey = "", actors = {}, you = null, keys = new Set(), cam = { x: 0, y: 0, z: 1 }, walkRaf = 0, lastTs = 0, near = null, nearOpened = false;
+const NPC_SPEED = 4.2, YOU_SPEED = 5.2;
+const calm = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ZOOMS = [0.75, 1, 1.25, 1.5];
+try { cam.z = ZOOMS.includes(+localStorage.getItem("foreman-zoom")) ? +localStorage.getItem("foreman-zoom") : 1 } catch (e) {}
+function person(id, at) { return { id, x: at[0] + 0.5, y: at[1] + 0.5, dir: "down", dist: 0, path: [], plan: [], waitEnd: 0, say: null, carry: null, home: at } }
+// A plan is a list of legs: {go: [x, y], face} or {wait: ms, say}. With no plan, a person goes home.
+function stepPerson(a, dt, speed) {
+  if (!a.path.length) {
+    // The walk of a leg just ended: the next leg.
+    if (a.onLeg) { a.onLeg = false; const leg = a.plan.shift(); if (leg && leg.face) a.dir = leg.face; return true }
+    const leg = a.plan[0];
+    if (leg && leg.wait != null) {
+      if (!a.waitEnd) { a.waitEnd = performance.now() + leg.wait; a.say = leg.say || null; if (leg.face) a.dir = leg.face }
+      if (performance.now() < a.waitEnd) return true;
+      a.plan.shift(); a.waitEnd = 0; a.say = null; a.carry = null; return true;
+    }
+    if (!leg && a === you) return false;  // you stay where you stopped
+    const goal = leg ? leg.go : a.home;
+    if (Math.floor(a.x) === goal[0] && Math.floor(a.y) === goal[1]) {
+      if (leg) { a.plan.shift(); if (leg.face) a.dir = leg.face; return true }
+      if (a.faceHome) a.dir = a.faceHome;
+      return false;
+    }
+    a.path = findPath(world, [a.x, a.y], goal);
+    if (!a.path.length) { if (leg) a.plan.shift(); return false }
+    a.onLeg = !!leg;
+  }
+  const [tx, ty] = a.path[0], cx = tx + 0.5, cy = ty + 0.5, dx = cx - a.x, dy = cy - a.y, d = Math.hypot(dx, dy), go = calm() ? 99 : speed * dt;
+  if (Math.abs(dx) > Math.abs(dy)) a.dir = dx > 0 ? "right" : "left"; else if (dy) a.dir = dy > 0 ? "down" : "up";
+  if (d <= go) { a.x = cx; a.y = cy; a.path.shift() } else { a.x += dx / d * go; a.y += dy / d * go }
+  a.dist += Math.min(d, go);
+  return true;
+}
+function blockedAt(x, y) { const i = Math.floor(x), j = Math.floor(y); return !world || j < 0 || j >= world.H || i < 0 || i >= world.W || world.solid[j][i] }
+function stepYou(dt) {
+  let vx = 0, vy = 0;
+  if (keys.has("left")) vx -= 1; if (keys.has("right")) vx += 1; if (keys.has("up")) vy -= 1; if (keys.has("down")) vy += 1;
+  if (!vx && !vy) return stepPerson(you, dt, YOU_SPEED);
+  you.path = []; you.plan = [];
+  const n = Math.hypot(vx, vy), s = YOU_SPEED * dt / n, r = 0.28;
+  const nx = you.x + vx * s, ny = you.y + vy * s;
+  if (![-r, r].some(o => blockedAt(nx + Math.sign(vx) * r, you.y + o * 0.6))) you.x = nx;
+  if (![-r, r].some(o => blockedAt(you.x + o, ny + (vy > 0 ? 0.15 : -0.3)))) you.y = ny;
+  you.dir = Math.abs(vx) >= Math.abs(vy) && vx ? (vx > 0 ? "right" : "left") : vy > 0 ? "down" : "up";
+  you.dist += YOU_SPEED * dt;
+  return true;
+}
+function saveYou() { try { localStorage.setItem("foreman-you", JSON.stringify([+you.x.toFixed(2), +you.y.toFixed(2)])) } catch (e) {} }
+function worldTick(ts) {
+  walkRaf = 0;
+  if (!world || !$("world")) return;
+  const dt = Math.min(0.05, lastTs ? (ts - lastTs) / 1000 : 0.016); lastTs = ts;
+  let alive = stepYou(dt);
+  Object.values(actors).forEach(a => { if (stepPerson(a, dt, NPC_SPEED)) alive = true });
+  if (alive) saveYou();
+  checkNear();
+  const settled = drawWorld(dt);
+  if (alive || !settled || keys.size) walkRaf = requestAnimationFrame(worldTick); else lastTs = 0;
+}
+const wake = () => { if (!walkRaf) walkRaf = requestAnimationFrame(worldTick) };
+function drawWorld(dt) {
+  const cv = $("world"); if (!cv) return true;
+  const g = cv.getContext("2d"), dpr = window.devicePixelRatio || 1, vw = cv.clientWidth, vh = cv.clientHeight, z = cam.z;
+  if (cv.width !== Math.round(vw * dpr) || cv.height !== Math.round(vh * dpr)) { cv.width = Math.round(vw * dpr); cv.height = Math.round(vh * dpr) }
+  // The camera follows you, eased, and stays inside the world.
+  const tx = Math.max(0, Math.min(world.W * T - vw / z, you.x * T - vw / z / 2)), ty = Math.max(0, Math.min(world.H * T - vh / z, you.y * T - vh / z / 2));
+  const ease = calm() ? 1 : Math.min(1, dt * 7);
+  cam.x += (tx - cam.x) * ease; cam.y += (ty - cam.y) * ease;
+  const settled = Math.abs(tx - cam.x) < 0.5 && Math.abs(ty - cam.y) < 0.5;
+  if (settled) { cam.x = tx; cam.y = ty }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = PAL.grass2; g.fillRect(0, 0, cv.width, cv.height);
+  g.imageSmoothingEnabled = false;
+  g.setTransform(dpr * z, 0, 0, dpr * z, -Math.round(cam.x * dpr * z) , -Math.round(cam.y * dpr * z));
+  g.drawImage(world.canvas, 0, 0);
+  const people = [...Object.values(actors), you].sort((a, b) => a.y - b.y);
+  if (near && actors[near]) { const a = actors[near]; g.strokeStyle = "rgba(255,255,255,.9)"; g.lineWidth = 2; g.beginPath(); g.ellipse(a.x * T, a.y * T + 8, 15, 6, 0, 0, Math.PI * 2); g.stroke() }
+  people.forEach(a => drawPerson(g, a.x * T, a.y * T + 12, looks(a.id === "you" ? "you" : a.id, a.dir, a.path.length || (a === you && keys.size) ? Math.floor(a.dist * 4) % 4 : 0)));
+  // Name tags, bubbles, room signs: HTML over the canvas, so they stay sharp and translated.
+  const sx = (x) => (x * T - cam.x) * z, sy = (y) => (y * T - cam.y) * z;
+  people.forEach(a => { const el = a.el; if (!el) return; el.style.transform = `translate(${sx(a.x).toFixed(1)}px,${(sy(a.y) - 34 * z).toFixed(1)}px)`; el.style.zIndex = Math.round(a.y * 10); sayErrand(a) });
+  document.querySelectorAll("#world-ov [data-room]").forEach(el => { const R = el.dataset.room === "lounge" ? world.lounge : world.rooms[+el.dataset.room]; el.style.transform = `translate(${sx(R.x + 1).toFixed(1)}px,${sy(R.y + 0.15).toFixed(1)}px)` });
+  document.querySelectorAll("#world-ov [data-glow]").forEach(el => { const R = world.rooms[+el.dataset.glow]; el.style.transform = `translate(${sx(R.x)}px,${sy(R.y)}px)`; el.style.width = R.w * T * z + "px"; el.style.height = R.h * T * z + "px" });
+  const card = $("site-card"); if (card && card.dataset.room) { const R = world.rooms[+card.dataset.room]; if (R) card.style.transform = `translate(${sx(R.x + R.w - 4).toFixed(1)}px,${sy(R.y + 0.2).toFixed(1)}px)` }
+  miniMap();
+  return settled;
+}
+function sayErrand(a) {
+  let sp = a.el.querySelector(".errand"); const text = a.say || a.carry;
+  if (!text) { if (sp) sp.remove(); return }
+  if (!sp) { sp = document.createElement("span"); sp.className = "bubble say errand"; a.el.appendChild(sp) }
+  if (sp.textContent !== text) sp.textContent = text;
+}
+function miniMap() {
+  const m = $("minimap"); if (!m) return;
+  const s = m.width / (world.W * T), g = m.getContext("2d");
+  g.imageSmoothingEnabled = true; g.drawImage(world.canvas, 0, 0, m.width, m.height);
+  const cv = $("world");
+  g.strokeStyle = "#fff"; g.lineWidth = 1.5; g.strokeRect(cam.x * s, cam.y * s, cv.clientWidth / cam.z * s, cv.clientHeight / cam.z * s);
+  Object.values(actors).forEach(a => { g.fillStyle = a.id === "main" ? "#f4f3ee" : roleColor(a.id); g.fillRect(a.x * T * s - 2, a.y * T * s - 2, 4, 4) });
+  g.fillStyle = "#e76f51"; g.beginPath(); g.arc(you.x * T * s, you.y * T * s, 3.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#fff"; g.stroke();
+}
+// Coming close to someone opens their card; walking away closes it, if it was opened that way.
+function checkNear() {
+  let best = null, bd = 2.3;
+  Object.values(actors).forEach(a => { const d = Math.hypot(a.x - you.x, a.y - you.y); if (d < bd) { bd = d; best = a.id } });
+  if (best === near) return;
+  near = best;
+  const label = $("near-label");
+  if (label) setHTML(label, near ? t("world.near", { name: actors[near].name || near }) : t("world.alone"));
+  const bar = $("chatbar"); if (bar) bar.classList.toggle("near", near === "main");
+  if (near && openBot !== near) { if (!nearOpened) paneBefore = pane; openBot = near; nearOpened = true; setTab("office"); if (officeArgs) showOffice(...officeArgs.slice(0, 3)) }
+  else if (!near && nearOpened) { nearOpened = false; openBot = null; setTab(paneBefore); if (officeArgs) showOffice(...officeArgs.slice(0, 3)) }
+}
+const KEYMAP = { ArrowUp: "up", ArrowDown: "down", ArrowLeft: "left", ArrowRight: "right", w: "up", s: "down", a: "left", d: "right", W: "up", S: "down", A: "left", D: "right" };
+function wireWorld() {
+  const cv = $("world");
+  cv.addEventListener("keydown", (e) => { const k = KEYMAP[e.key]; if (!k || e.metaKey || e.ctrlKey || e.altKey) return; e.preventDefault(); keys.add(k); wake() });
+  cv.addEventListener("keyup", (e) => { const k = KEYMAP[e.key]; if (k) keys.delete(k) });
+  cv.addEventListener("blur", () => keys.clear());
+  cv.addEventListener("click", (e) => {
+    cv.focus({ preventScroll: true });
+    const r = cv.getBoundingClientRect(), wx = (e.clientX - r.left) / cam.z + cam.x, wy = (e.clientY - r.top) / cam.z + cam.y;
+    // A click on a person opens its card; a click on the floor walks you there.
+    const hit = Object.values(actors).find(a => Math.abs(wx - a.x * T) < 14 && wy < a.y * T + 14 && wy > a.y * T - 34);
+    if (hit) { nearOpened = false; pickBot(hit.id); return }
+    you.plan = [{ go: [Math.floor(wx / T), Math.floor(wy / T)] }]; you.path = []; you.onLeg = false; wake();
+  });
+  $("minimap").addEventListener("click", (e) => {
+    const m = $("minimap"), r = m.getBoundingClientRect(), s = (world.W * T) / r.width;
+    you.plan = [{ go: [Math.floor((e.clientX - r.left) * s / T), Math.floor((e.clientY - r.top) * s / T)] }]; you.path = []; you.onLeg = false; wake();
+  });
+  new ResizeObserver(() => { lastTs = 0; drawWorld(1); wake() }).observe(cv);
+}
+function zoomBy(d) {
+  const i = Math.max(0, Math.min(ZOOMS.length - 1, ZOOMS.indexOf(cam.z) + d));
+  cam.z = ZOOMS[i]; try { localStorage.setItem("foreman-zoom", String(cam.z)) } catch (e) {}
+  drawWorld(1); wake();
+}
+// Now and then someone in the break room takes a stroll, or goes for a coffee.
+setInterval(() => {
+  if (!world || document.hidden || calm() || tab !== "office" || !$("world")) return;
+  const idle = Object.values(actors).filter(a => a.away && !a.plan.length && !a.path.length);
+  if (!idle.length || Math.random() < 0.35) return;
+  const a = idle[Math.floor(Math.random() * idle.length)], L = world.lounge;
+  const spot = Math.random() < 0.3 ? [L.x + 2, L.y + 2] : [L.x + 2 + Math.floor(Math.random() * (L.w - 4)), L.y + 3 + Math.floor(Math.random() * 3)];
+  a.plan = [{ go: spot }, { wait: 1800 + Math.random() * 2500, say: spot[0] === L.x + 2 && spot[1] === L.y + 2 ? "☕" : null }];
+  wake();
+}, 3000);
+
+// "Simulate the flow": a whole task played on the map with sample data, in about a minute, so the
+// dev sees how the crew moves. Nothing is sent and nothing is read: it only replaces the lanes.
+const DEMO = [[0, "main", "running", "Agent refiner"], [1, "refiner", "running", "Read src/report.py"], [5, "refiner", "running", "Write 01-contract.md"],
+  [10, "refiner", "ok"], [15, "executor", "running", "Edit src/export.py"], [20, "executor", "blocked"], [28, "executor", "running", "Bash pytest -q"],
+  [33, "executor", "ok"], [38, "tester", "running", "Write tests/test_export.py"], [44, "tester", "ok"],
+  [49, "reviewer", "running", "Read review.diff"], [49.5, "security-reviewer", "running", "Grep password|token"], [50, "qa-reviewer", "running", "Read 03-proof.md"],
+  [50.5, "product-reviewer", "running", "Read product-sources.md"], [57, "reviewer", "ok"], [58.5, "security-reviewer", "ok"], [60, "qa-reviewer", "ok"],
+  [61.5, "product-reviewer", "ok"], [67, "retrospective", "running", "Write 05-retro.md"], [73, "retrospective", "ok"], [80, "end"]];
+let demo = null, officeArgs = null;
+function demoLanes() {
+  const el = (Date.now() - demo.t0) / 1000, out = {};
+  for (const [at, type, state, last] of DEMO) {
+    if (at > el) break;
+    if (type === "end") { stopDemo(); return null }
+    const l = out[type] || (out[type] = { agent: "demo-" + type, type, tools: 0, start: demo.t0 / 1000 + at });
+    Object.assign(l, { state, seen: Date.now() / 1000 }, last ? { last } : {});
+  }
+  return out;
+}
+function stopDemo() { if (demo) { clearInterval(demo.timer); demo = null; Object.values(actors).forEach(a => a.prev = null); if (officeArgs) showOffice(...officeArgs.slice(0, 3)) } }
+function startDemo() {
+  stopDemo();
+  demo = { t0: Date.now(), timer: setInterval(() => officeArgs && showOffice(...officeArgs.slice(0, 3)), 400) };
+  showOffice(...officeArgs.slice(0, 3));
+}
+const shortSay = (x) => { const v = String(x || "").replace(/\s+/g, " ").trim(); return v.length > 36 ? v.slice(0, 35) + "…" : v || "…" };
+function pickBot(r) { openBot = openBot === r ? null : r; nearOpened = false; if (openBot) setTab("office"); if (officeArgs) showOffice(...officeArgs.slice(0, 3)) }
+document.addEventListener("fullscreenchange", () => { const b = $("site-full"); if (b) b.title = t(document.fullscreenElement ? "site.exit" : "site.full"); if (world && $("world")) drawWorld(1) });
+
 function showOffice(d, list, now) {
   if (tab !== "office") return;
+  officeArgs = [d, list, now];
+  const fake = demo ? demoLanes() : null;
+  const lanes = fake || lanesOf(d);
+  const runningNow = Object.values(lanes).find(l => l.state === "running" && l.type !== "main");
   const here = stepRoom(list[now]);
-  const lanes = lanesOf(d), L = layout();
-  const stageOf = (r) => d.stages.find(s => s.agent === r);
-  const pct = ([x, y]) => `left:${x / 10}%;top:${y / L.H * 100}%`;
-  const labels = L.rooms.map(({ r, x, y }) => `<span class="rlabel${r.id === here ? " here" : ""}" style="${pct([x + 15, y + 12])}">${esc(roomName(r))}</span>`).join("");
-  const bots = Object.entries(L.seats).map(([r, xy]) => {
+  const at = fake ? (runningNow ? roomOf(runningNow.type) : roomOf("main")) : here;
+  const stageOf = (r) => fake ? null : d.stages.find(s => s.agent === r);
+  const plan = $("plan");
+  // The world is built once per plan and language; the people then move over it.
+  const key = lang + proj + JSON.stringify(rooms());
+  if (plan.dataset.key !== key || !world) {
+    plan.dataset.key = key;
+    world = buildWorld(); actors = {};
+    let saved = null; try { saved = JSON.parse(localStorage.getItem("foreman-you") || "null") } catch (e) {}
+    you = person("you", world.start);
+    if (Array.isArray(saved) && !blockedAt(saved[0], saved[1])) { you.x = saved[0]; you.y = saved[1] }
+    you.dir = "up";
+    const ovRooms = world.rooms.map((R, i) => `<span class="rglow" data-glow="${i}"></span><span class="rlabel" data-room="${i}">${esc(roomName(R.r))}</span>`).join("") +
+      `<span class="rlabel lounge" data-room="lounge">${t("room.lounge")}</span>`;
+    plan.innerHTML = `<div class="stage">` +
+      `<div class="worldbox"><canvas id="world" tabindex="0" aria-label="${esc(t("site.hint"))}"></canvas><div id="world-ov">${ovRooms}<span class="token" id="site-card"></span><span class="who you-tag" id="you-tag"><span class="tag me">${t("office.you")}</span></span></div>` +
+      `<canvas id="minimap" width="170" height="${Math.round(170 * world.H / world.W)}" title="${esc(t("world.map"))}"></canvas>` +
+      `<div class="gbar"><span class="me-chip">${avatarImg("you", 30)}<b>${t("office.you")}</b><span class="meta" id="near-label">${t("world.alone")}</span></span>` +
+      `<span class="gbtns"><button type="button" id="site-demo"></button><button type="button" id="go-boss">${t("world.goto")}</button><button type="button" id="zoom-out" title="${esc(t("world.zoomout"))}">−</button><button type="button" id="zoom-in" title="${esc(t("world.zoomin"))}">+</button><button type="button" id="site-full" title="${esc(t(document.fullscreenElement ? "site.exit" : "site.full"))}">⛶</button></span></div></div>` +
+      `<div class="meta world-hint" id="site-hint"></div>` +
+      `<div class="dock" id="chatbar"><div class="dock-head">${avatarImg("main", 30)}<b>${t("office.foreman")}</b><span class="meta" id="chat-state"></span></div><div class="said" id="chat-said" hidden></div>` +
+      `<div class="dock-row"><textarea id="chat-in" rows="2" placeholder="${esc(t("chat.placeholder"))}"></textarea><button class="primary" type="button" id="chat-send"></button></div><div id="chat-extra"></div></div></div>`;
+    $("chat-send").onclick = sendChat;
+    $("chat-in").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); sendChat() } });
+    you.el = $("you-tag");
+    $("site-full").onclick = () => document.fullscreenElement ? document.exitFullscreen() : plan.requestFullscreen && plan.requestFullscreen();
+    $("site-demo").onclick = () => demo ? stopDemo() : startDemo();
+    $("zoom-in").onclick = () => zoomBy(1); $("zoom-out").onclick = () => zoomBy(-1);
+    $("go-boss").onclick = () => { you.plan = [{ go: world.spots[0] || world.boss }]; you.path = []; you.onLeg = false; $("world").focus({ preventScroll: true }); wake() };
+    wireWorld();
+    cam.x = Math.max(0, you.x * T - 400); cam.y = Math.max(0, you.y * T - 260);
+  }
+  setHTML($("site-hint"), demo ? `<span class="demo-on">${t("site.demo.on")}</span>` : t(d.none ? "site.notask" : "site.hint"));
+  setHTML($("site-demo"), t(demo ? "site.demo.stop" : "site.demo"));
+  world.rooms.forEach((R, i) => {
+    const on = R.r.agents.some(a => lanes[a] && lanes[a].state === "running" && a !== "main");
+    plan.querySelector(`[data-glow="${i}"]`).classList.toggle("on", on);
+    plan.querySelector(`[data-room="${i}"]`).classList.toggle("here", R.r.id === at && (!d.none || !!fake));
+  });
+  const ov = $("world-ov"), crew = [];
+  Object.keys(actors).forEach(r => { if (!(r in world.seats)) { actors[r].el && actors[r].el.remove(); delete actors[r] } });
+  Object.entries(world.seats).forEach(([r, desk], order) => {
     const lane = lanes[r], st = stageOf(r);
     const state = lane ? (lane.state === "ok" && st && st.verdict === "FAIL" ? "failed" : lane.state) : st && st.written ? "ok" : "idle";
-    const hand = lane ? handOf(d, lane) : null;
-    const bubble = hand ? '<span class="bubble hand" title="' + esc(t("office.hand")) + '">' + HAND(22) + '</span>' : state === "running" ? '<span class="bubble">…</span>' : "";
-    // Reviewers sit side by side: their tag says the lens, the full role is in the robot's card.
+    const hand = lane ? (fake ? (lane.state === "blocked" ? { kind: "blocked" } : null) : handOf(d, lane)) : null;
+    // Not started for this task: it waits in the break room, and walks to its desk when it starts.
+    const away = r !== "main" && !lane && !(st && st.written);
+    const bubble = hand ? '<span class="bubble hand" title="' + esc(t("office.hand")) + '">' + HAND(20) + '</span>' : state === "running" ? '<span class="bubble say">' + esc(shortSay(lane.last)) + '</span>'
+      : d.none || away ? '<span class="bubble say zz">' + t(d.none ? "idle.notask" : "idle.waiting") + '</span>' : "";
+    // Reviewers sit side by side: their tag says the lens, the full role is in the card.
     const lens = Object.keys(LENS_ROLE).find(k => LENS_ROLE[k] === r);
-    const name = r === "main" ? t("office.you") : lens ? lensName(lens) : roleName(r);
-    return `<button type="button" class="seat ${esc(state)}${openBot === r ? " open" : ""}" data-bot="${esc(r)}" style="${pct(xy)}"><span class="tag"><i class="dot ${esc(state)}"></i>${esc(name)}</span>${bubble}${robot(r === "main" ? "foreman" : r, state, 44)}</button>`;
-  }).join("");
-  const room = L.rooms.find(x => x.r.id === here) || L.rooms[0];
-  const card = `<span class="token" style="${pct([room.x + room.w / 2, room.y + 46])}">📋 ${esc(d.id)}</span>`;
-  const html = `<div class="floor" style="aspect-ratio:1000/${L.H}">${floorSVG(L)}${labels}${bots}${card}</div>`;
-  const plan = $("plan");
-  if (plan.dataset.html !== html) {
-    plan.innerHTML = html + `<div id="pop"></div>`;
-    plan.dataset.html = html;
-    plan.querySelectorAll("[data-bot]").forEach(b => b.onclick = () => { openBot = openBot === b.dataset.bot ? null : b.dataset.bot; plan.dataset.html = ""; showOffice(lastTask, list, now) });
+    const name = r === "main" ? t("office.foreman") : lens ? lensName(lens) : roleName(r);
+    let a = actors[r];
+    if (!a) {
+      a = actors[r] = person(r, away ? world.rest[r] : desk); a.prev = state;
+      a.el = document.createElement("button"); a.el.type = "button"; a.el.className = "who"; a.el.onclick = () => pickBot(r);
+      a.el.innerHTML = '<span class="face"></span>'; ov.appendChild(a.el);
+    }
+    a.name = name; a.away = away;
+    // Home: the break room before it starts, in front of the foreman while its hand is up (it
+    // went to ask), its desk otherwise.
+    const asks = hand && r !== "main";
+    a.home = asks ? world.spots[order % world.spots.length] : away ? world.rest[r] : desk;
+    a.faceHome = asks ? "up" : "down";
+    // A stage just finished: it takes its file to the foreman, then goes back.
+    if (r !== "main" && a.prev === "running" && (state === "ok" || state === "failed")) {
+      a.carry = "📄 " + (((flowCfg.stages || {})[r] || {}).file || "");
+      a.plan = [{ go: world.spots[(order + 3) % world.spots.length] }, { wait: 2600, face: "up", say: a.carry + " ✓" }]; a.path = []; a.onLeg = false;
+    }
+    // A stage just started: the foreman walks over to hand it the task, then goes back.
+    const fm = actors.main;
+    if (r !== "main" && a.prev !== "running" && state === "running" && fm && !fm.plan.length) {
+      fm.carry = "📋 " + (d.id || "");
+      fm.plan = [{ go: [desk[0] + 1, desk[1]] }, { wait: 1800, face: "left", say: "📋 → " + name }]; fm.path = []; fm.onLeg = false;
+    }
+    a.prev = state;
+    a.el.className = `who ${state}${openBot === r ? " open" : ""}${away ? " away" : ""}${near === r ? " near" : ""}`;
+    setHTML(a.el.firstChild, `${bubble}<span class="tag"><i class="dot ${esc(state)}"></i>${esc(name)}</span>`);
+    const room = world.rooms.find(x => x.r.agents.includes(r));
+    crew.push({ r, state, hand, away, lane, order, name: r === "main" ? t("office.foreman") : roleName(r), where: away ? t("room.lounge") : room ? roomName(room.r) : "" });
+  });
+  const rank = (c) => c.hand ? 0 : c.state === "running" ? 1 : c.away ? 3 : 2;
+  crew.sort((a, b) => rank(a) - rank(b) || a.order - b.order);
+  const list2 = $("crew-list");
+  setHTML(list2, crew.map(c => `<button type="button" class="crew-row ${esc(c.state)}${c.away ? " away" : ""}${c.hand ? " hand" : ""}${openBot === c.r ? " open" : ""}" data-crew="${esc(c.r)}">${avatarImg(c.r, 30)}` +
+    `<span class="cn"><b>${esc(c.name)}</b><span class="meta">${esc(c.where)} · ${has("lane.state." + c.state) ? t("lane.state." + c.state) : esc(c.state)}</span>` +
+    `${c.state === "running" && c.lane && c.lane.last ? `<span class="cl">${esc(c.lane.last)}</span>` : ""}</span>${c.hand ? HAND(18) : ""}</button>`).join(""));
+  list2.querySelectorAll("[data-crew]").forEach(b => b.onclick = () => pickBot(b.dataset.crew));
+  const card = $("site-card"), ri = world.rooms.findIndex(x => x.r.id === at);
+  card.dataset.room = String(Math.max(0, ri));
+  if (card.textContent !== "📋 " + d.id) card.textContent = "📋 " + d.id;
+  card.hidden = !!d.none && !fake;
+  lastTs = 0; wake();
+  if (!plan.dataset.focused) { plan.dataset.focused = "1"; $("world").focus({ preventScroll: true }) }
+  showChat(d, lanes);
+  if (fake) $("pop").innerHTML = ""; else showPop(d, lanes);
+}
+// The chat under the map, always open. The session's turn held for the page: the message goes
+// now. The session working: it waits in a queue and goes when the turn comes. No session: the page
+// cannot open one, so it writes the whole command for a terminal.
+let chatCtx = {}, chatQueue = null, chatTurnKey = "";
+// The turn the chat shows: it is answered there, so "Waiting on you" leaves it out.
+const tkey = (a) => [a.session, a.agent, a.kind, a.since].join("/");
+const inChat = (a, wt) => !!chatTurnKey && wt === chatCtx.wt && tkey(a) === chatTurnKey;
+function showChat(d, lanes) {
+  const bar = $("chatbar");
+  if (!bar) return;
+  const wtN = sel ? sel.wt : d.wt, info = wtInfo.find(x => x.wt === wtN) || {}, tg = lastGroups.find(x => x.wt === wtN);
+  const turnsOn = !!((info.switches || (tg && tg.switches) || {}).turns);
+  const mh = lanes.main ? handOf(d, lanes.main) : null;
+  const g = attention.find(x => x.wt === wtN);
+  const held = g && g.alerts.find(a => a.agent === "main" && a.kind === "turn" && a.held);
+  const turn = mh && mh.kind === "alert" && mh.alert.kind === "turn" && mh.alert.held ? mh.alert : held ? { ...held, wt: g.wt } : null;
+  // Stopped at the prompt with the page's hold over (it expired, or no page was open): the session
+  // waits in its terminal, and nothing the page sends reaches it until the dev types there.
+  const idleA = !turn && g && g.alerts.find(a => a.agent === "main" && a.kind === "turn" && !a.held);
+  const idle = idleA ? { ...idleA, wt: g.wt } : !turn && info.fresh ? { fresh: true, session: "", agent: "main", kind: "fresh", since: 0, wt: wtN } : null;
+  const live = !!info.live || !!turn;
+  chatCtx = { turn, idle, live, turnsOn, wt: wtN, path: info.path || (tg && tg.path) || (g && g.path) || ".", name: info.name || d.worktree || "" };
+  bar.classList.toggle("turn", !!turn);
+  const tk = turn || (idle && !idle.fresh) ? tkey(turn || idle) : "";
+  if (tk !== chatTurnKey) { chatTurnKey = tk; attnSig = ""; showAttention(); showTodo(lastGroups) }
+  setHTML($("chat-state"), turn ? t("chat.state.turn") : idle ? t(idle.fresh ? "chat.state.fresh" : "chat.state.idle") : live ? t("chat.state.working") : t("chat.state.none", { wt: chatCtx.name }));
+  const said = $("chat-said");
+  const shown = turn || idle;
+  said.hidden = !shown || !shown.detail;
+  if (shown && said.dataset.raw !== shown.detail) { said.dataset.raw = shown.detail || ""; said.innerHTML = mdLite(shown.detail || ""); said.scrollTop = 0 }
+  setHTML($("chat-send"), t(turn ? "chat.send" : idle ? "chat.term" : live && turnsOn ? "chat.queue" : "chat.cmd"));
+  // A queued message goes the moment the session's turn is held for the page.
+  if (turn && chatQueue && chatQueue.wt === wtN) { const text = chatQueue.text; chatQueue = null; deliver(turn, text) }
+  else if (idle && chatQueue && chatQueue.wt === wtN) { const text = chatQueue.text; chatQueue = null; toTerminal(text, idle.fresh) }
+  else if (chatQueue && chatQueue.wt === wtN) {
+    setHTML($("chat-extra"), `<div class="meta">${t("chat.queued")}</div><div class="meta">${esc(chatQueue.text)}</div><div class="actions"><button type="button" data-unqueue>${t("chat.unqueue")}</button></div>`);
+    const b = $("chat-extra").querySelector("[data-unqueue]");
+    if (b) b.onclick = () => { if (chatQueue) $("chat-in").value = chatQueue.text; chatQueue = null; setHTML($("chat-extra"), "") };
   }
-  showPop(d, lanes);
+  else if (live && !turnsOn && !turn && !$("chat-extra").dataset.cmd) setHTML($("chat-extra"), `<div class="meta">${t("chat.off")}</div><div class="actions"><button class="primary" data-switch="turns" data-wt="${wtN}" data-on="1">${t("switch.turn-on.turns")}</button></div>`);
+}
+async function deliver(turn, text) {
+  const r = await post("api/answer", { wt: turn.wt, session: turn.session, agent: turn.agent, qid: turn.qid, message: text });
+  $("chat-extra").dataset.cmd = "";
+  setHTML($("chat-extra"), r.ok ? `<div class="ok">${t("chat.sent")}</div>` : await errorText(r));
+  setTimeout(tick, 300);
+}
+// The session's message, as Claude writes it: bold and code spans, nothing else.
+const mdLite = (text) => esc(text).replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>").replace(/`([^`\n]+)`/g, "<code>$1</code>");
+// The page cannot type into a terminal: the text goes there by hand, copied from here.
+function toTerminal(text, fresh) {
+  $("chat-extra").dataset.cmd = "1";
+  setHTML($("chat-extra"), `<div class="meta">${t(fresh ? "chat.fresh" : "chat.idle")}</div>${cmdBlock(text)}`);
+}
+function sendChat() {
+  const box = $("chat-in"), text = box.value, c = chatCtx;
+  if (!text.trim()) return;
+  if (c.turn) { box.value = ""; deliver(c.turn, text); return }
+  if (c.idle) { box.value = ""; toTerminal(text, c.idle.fresh); return }
+  if (c.live && c.turnsOn) { chatQueue = { wt: c.wt, text }; box.value = ""; if (officeArgs) showOffice(...officeArgs.slice(0, 3)); return }
+  $("chat-extra").dataset.cmd = "1";
+  setHTML($("chat-extra"), `<div class="meta">${t("chat.none")}</div>${cmdBlock(`cd ${q(c.path)} && claude ${q(text)}`)}`);
 }
 // The robot the dev clicked: what it does, and what it waits for, answerable right there.
 function showPop(d, lanes) {
@@ -2036,15 +2798,21 @@ function showPop(d, lanes) {
   const hand = lane ? handOf(d, lane) : null;
   const state = lane ? lane.state || "idle" : st && st.written ? "ok" : "idle";
   const when = lane ? (lane.end ? t("lane.took", { s: Math.round(lane.end - lane.start) }) : t("lane.since", { ago: ago(lane.start) })) : "";
-  let html = `<div class="pop"><div class="head">${robot(openBot === "main" ? "foreman" : openBot, state, 44)}<div><b>${esc(openBot === "main" ? t("office.you") : roleName(openBot))}</b><div class="meta">${has("lane.state." + state) ? t("lane.state." + state) : esc(state)}${when ? " · " + when : ""}</div></div></div>`;
+  let html = `<div class="pop"><button type="button" class="dismiss" data-close-pop title="${esc(t("pop.close"))}">×</button><div class="head">${avatarImg(openBot, 48)}<div><b>${esc(openBot === "main" ? t("office.foreman") : roleName(openBot))}</b><div class="meta">${has("lane.state." + state) ? t("lane.state." + state) : esc(state)}<span data-when></span></div></div></div>`;
   if (st) html += `<div class="meta">${t("pop.file", { file: st.file })}${st.verdict ? " · " + esc(verdictName(st.verdict)) : ""}</div>`;
-  if (lane && lane.last) html += `<details><summary>${t("lane.more")}</summary><div class="meta">${t("lane.id", { id: String(lane.agent).slice(0, 12), tools: lane.tools, ago: ago(lane.seen) })}</div><div class="detail">${esc(lane.last)}</div></details>`;
+  if (lane && lane.last) html += `<details><summary>${t("lane.more")}</summary><div class="meta" data-laneid></div><div class="detail">${esc(lane.last)}</div></details>`;
   if (lane && lane.summary) html += `<div class="detail">${esc(lane.summary)}</div>`;
-  if (hand && hand.kind === "alert") html += `<div class="alert ${esc(hand.alert.kind)}" style="margin-top:8px"><div class="head">${HAND(16)} ${t("kind." + hand.alert.kind)}</div>${alertBody(hand.alert, 0)}</div>`;
+  if (hand && hand.kind === "alert" && openBot === "main" && hand.alert.kind === "turn") html += `<div class="meta" style="margin-top:8px">${HAND(16)} ${t("pop.chat")}</div>`;
+  else if (hand && hand.kind === "alert") html += `<div class="alert ${esc(hand.alert.kind)}" style="margin-top:8px"><div class="head">${HAND(16)} ${t("kind." + hand.alert.kind)}</div>${alertBody(hand.alert, 0, "p")}</div>`;
   else if (hand) html += `<div class="warn">${t("pop.blocked")}</div>`;
   else if (!lane) html += `<div class="meta">${t("pop.idle")}</div>`;
   html += "</div>";
-  if (pop.dataset.html !== html) { pop.innerHTML = html; pop.dataset.html = html; if (hand && hand.kind === "alert") wireAlerts(pop, [hand.alert]) }
+  if (pop.dataset.html !== html) { pop.innerHTML = html; pop.dataset.html = html; if (hand && hand.kind === "alert" && !(openBot === "main" && hand.alert.kind === "turn")) wireAlerts(pop, [hand.alert], "p") }
+  // Filled after the redraw check: they change every tick, and a redraw would wipe what the dev
+  // was marking in the card's question.
+  const w = pop.querySelector("[data-when]"); if (w) w.textContent = when ? " · " + when : "";
+  const li = pop.querySelector("[data-laneid]"); if (li && lane) li.textContent = t("lane.id", { id: String(lane.agent).slice(0, 12), tools: lane.tools, ago: ago(lane.seen) });
+  pop.querySelector("[data-close-pop]").onclick = () => pickBot(openBot);
 }
 
 // The purpose as written, minus the template: comments, the title line and empty sections.
@@ -2222,13 +2990,14 @@ function beep() {
 }
 
 // Live updates: the server's event stream; when it is refused or drops, a 2 s poll.
-let live = false, poll = null, connecting = true;
+let live = false, poll = null, connecting = true, stream = null;
 function liveLabel() { const el = $("live"); el.className = "live" + (live ? "" : " off"); el.innerHTML = `<i></i>${t(live ? "live.on" : connecting ? "live.connecting" : "live.off")}` }
 function startPoll() { if (!poll) poll = setInterval(tick, 2000) }
 function connect() {
   if (!("EventSource" in window)) { startPoll(); return }
   // The stream takes the page's token: another site cannot hold its connections.
-  const es = new EventSource("api/events?t=" + encodeURIComponent(TOKEN));
+  if (stream) stream.close();
+  const es = stream = new EventSource(scoped("api/events?t=" + encodeURIComponent(TOKEN)));
   es.addEventListener("hello", () => { live = true; connecting = false; liveLabel(); if (poll) { clearInterval(poll); poll = null } });
   es.addEventListener("change", () => tick());
   es.onerror = () => { es.close(); live = false; connecting = false; liveLabel(); startPoll() };

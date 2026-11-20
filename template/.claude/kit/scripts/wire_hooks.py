@@ -45,6 +45,8 @@ GONE = ("cleanup.py",)
 # to 700 s without a kill (no run went longer), and a 15 s timeout killed its 45 s hook at 15 s
 # (the control). PermissionRequest was not measured on its own: it runs through the same runner.
 HOLD_TIMEOUT = 3600
+# The turn's 8 h lets the chat reach an idle session while the page is open.
+TURN_TIMEOUT = 8 * 3600
 # (event, matcher or None, command, timeout). The rest return in milliseconds.
 HOOKS = [
     ("PreToolUse", "*", FLOW, 10),
@@ -58,7 +60,7 @@ HOOKS = [
     ("SubagentStart", None, FLOW, 10),
     ("SubagentStop", None, FLOW, 10),
     ("Stop", None, FLOW, 10),
-    ("Stop", None, TURN, HOLD_TIMEOUT),
+    ("Stop", None, TURN, TURN_TIMEOUT),
     ("UserPromptSubmit", None, FLOW, 10),
     ("SessionStart", None, FLOW, 10),
     ("SessionStart", None, CLEANUP, 10),
